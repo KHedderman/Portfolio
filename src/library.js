@@ -1,40 +1,6 @@
 // Photographic spines are rectified original pixels; provenance: docs/spine-sources.json.
 export const books = [
   {
-    "id": "converted",
-    "title": "Converted",
-    "author": "Neil Hoyne",
-    "subtitle": "",
-    "color": "#d9c228",
-    "ink": "#181a19",
-    "topic": "Customer insight",
-    "height": 3.23,
-    "width": 0.4,
-    "depth": 2.12,
-    "binding": "paper",
-    "roughness": 0.72,
-    "metalness": 0,
-    "spineImage": "/images/books/converted-individual-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": "/images/books/converted-individual-cover.webp",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=Converted%20Neil%20Hoyne",
-    "affiliate": false,
-    "coverCrop": [
-      0,
-      1
-    ],
-    "photoPresentation": true
-  },
-  {
     "id": "the-coming-wave",
     "title": "The Coming Wave",
     "author": "Mustafa Suleyman",
@@ -436,41 +402,6 @@ export const books = [
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "spinePerspectiveFit": true,
-    "photoPresentation": true,
-    "coverCrop": [
-      0,
-      1
-    ]
-  },
-  {
-    "id": "supremacy",
-    "title": "Supremacy",
-    "author": "Parmy Olson",
-    "subtitle": "",
-    "color": "#45ce32",
-    "ink": "#181a19",
-    "topic": "AI & power",
-    "height": 3.7,
-    "width": 0.58,
-    "depth": 2.42,
-    "binding": "paper",
-    "roughness": 0.4,
-    "metalness": 0,
-    "spineImage": "/images/books/supremacy-individual-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": "/images/books/supremacy-individual-cover.webp",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=Supremacy%20Parmy%20Olson",
-    "affiliate": false,
     "spinePerspectiveFit": true,
     "photoPresentation": true,
     "coverCrop": [

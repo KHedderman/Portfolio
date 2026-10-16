@@ -88,3 +88,7 @@ Supremacy uses IMG_7694 for the full spine and IMG_7693 for the cover, checked a
 The Infinity Machine uses IMG_7707 for its full spine, IMG_7706 for its front cover, and IMG_7708/7709 as detail references. Its width is .82, matching Empire of AI exactly as the user requested; its existing height remains unchanged. Preserve orange shading, repeated lettering, natural edges and the cover's photographed finish.
 
 The Singularity Is Nearer uses IMG_7711 for the complete spine and IMG_7710 for the cover. Preserve the crumpled jacket head, glossy highlights, original graphics and publisher mark. Both use original-pixel transparent cutouts and the established upright spine fit. No additional top/page construction. Reproduce with `--zip11 <extracted-folder> --only the-infinity-machine the-singularity-is-nearer`.
+
+## Reading-list edit
+
+The user requested removal of Converted and Supremacy. Both entries are removed from the active `books` array, which also updates shelf packing, the reading list, and reader pagination. Their photographic assets and extraction recipes are retained so this editorial choice is reversible. No other titles are removed; additional trimming recommendations require a user decision.
