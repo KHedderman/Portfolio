@@ -47,13 +47,32 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   geometry.computeVertexNormals();return geometry;
  },[book.width,book.depth]);
  useEffect(()=>()=>pageHead.dispose(),[pageHead]);
+ const spineShape=useMemo(()=>{
+  if(!book.spineSilhouette)return null;
+  const canvas=document.createElement('canvas');canvas.width=160;canvas.height=768;
+  const context=canvas.getContext('2d',{willReadFrequently:true});const image=spineMap.image;
+  const [x,width,y=0,height=1]=book.spineCrop;
+  context.drawImage(image,x*image.width,(1-y-height)*image.height,width*image.width,height*image.height,0,0,160,768);
+  const pixels=context.getImageData(0,0,160,768).data;const left=[],right=[];
+  for(let row=0;row<768;row+=2){let first=-1,last=-1;
+   for(let col=0;col<160;col++){if(pixels[(row*160+col)*4+3]>160){if(first<0)first=col;last=col;}}
+   if(last-first<20)continue;
+   const py=(.5-row/767)*book.height;
+   left.push(new THREE.Vector2((first/159-.5)*book.width,py));right.push(new THREE.Vector2((last/159-.5)*book.width,py));
+  }
+  const shape=new THREE.Shape([...left,...right.reverse()]);shape.closePath();return shape;
+ },[book,spineMap]);
  const spineSurface=useMemo(()=>{
-  const inset=book.spineFullBleed?.004:.026;
-  const geometry=new THREE.PlaneGeometry(book.width-inset,book.height-(book.spineFullBleed?.004:.025),24,1);
-  const vertices=geometry.attributes.position;
-  for(let i=0;i<vertices.count;i++){const x=vertices.getX(i)/((book.width-inset)/2);vertices.setZ(i,(book.spineRelief??0)*(1-x*x));}
+  const inset=book.spineSilhouette?0:.026;
+  const geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-.025,24,1);
+  const vertices=geometry.attributes.position;const uv=geometry.attributes.uv;
+  for(let i=0;i<vertices.count;i++){
+   const x=vertices.getX(i)/((book.width-inset)/2);
+   vertices.setZ(i,(book.spineRelief??0)*(1-x*x));
+   if(spineShape)uv.setXY(i,vertices.getX(i)/book.width+.5,vertices.getY(i)/book.height+.5);
+  }
   geometry.computeVertexNormals();return geometry;
- },[book.width,book.height,book.spineRelief,book.spineFullBleed]);
+ },[book,spineShape]);
  useEffect(()=>()=>spineSurface.dispose(),[spineSurface]);
  const w=book.width,h=book.height,d=book.depth;
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
@@ -62,9 +81,9 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
    <mesh castShadow receiveShadow position={[0,h/2,-.025]}><boxGeometry args={[w-.07,h-.15,d-.09]}/><meshStandardMaterial map={maps.paper} roughness={.92}/></mesh>
-   {[-1,1].map(side=><RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,0]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
-   <mesh position={[w/2+.01,h/2,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[d-.035,h-.02]}/><meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
-   <RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>
+   {[-1,1].map(side=><RoundedBox key={side} args={[.045,h-(spineShape?.07:0),d-(spineShape?.14:0)]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,spineShape?-.07:0]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
+   <mesh position={[w/2+.01,h/2,spineShape?-.07:0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[d-.035-(spineShape?.14:0),h-(spineShape?.07:.02)]}/><meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
+   {spineShape?<mesh position={[0,h/2,d/2-.04]} castShadow receiveShadow><extrudeGeometry args={[spineShape,{depth:.05,bevelEnabled:false,steps:1}]}/><meshStandardMaterial color={book.color} roughness={.8}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
    <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent alphaTest={.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,h-.045,-.025]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
