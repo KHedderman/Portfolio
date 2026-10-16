@@ -38,7 +38,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  });
  // Fit the supporting binding inside the photographed jacket, not around it.
  const photographedJacket=!!book.spineSilhouette;
- const bodyWidth=book.width-(photographedJacket?.14:.07);
+ const bodyWidth=book.width-.07;
  const bodyHeight=book.height-(photographedJacket?.24:.15);
  const bodyDepth=book.depth-(photographedJacket?.02:.09);
  const bodyZ=photographedJacket?0:-.025;
@@ -69,34 +69,6 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   }
   const shape=new THREE.Shape([...left,...right.reverse()]);shape.closePath();return shape;
  },[book,spineMap]);
- // A continuous jacket shoulder joins the photographed crown to the cover boards.
- // Follow the source silhouette so the curved head is not a flat cutout in front of a box.
- const jacketShoulder=useMemo(()=>{
-  if(!spineShape)return null;
-  const outline=spineShape.getPoints();const positions=[],uvs=[],indices=[];
-  const segments=48,front=book.depth/2+.012;
-  for(let i=0;i<=segments;i++){
-   const x=(i/segments-.5)*book.width*.96;
-   let crown=-book.height/2;
-   for(let j=0;j<outline.length-1;j++){
-    const a=outline[j],b=outline[j+1];
-    if(x>=Math.min(a.x,b.x)&&x<=Math.max(a.x,b.x)&&Math.abs(b.x-a.x)>1e-7){
-     crown=Math.max(crown,a.y+(b.y-a.y)*(x-a.x)/(b.x-a.x));
-    }
-   }
-   for(let row=0;row<2;row++){
-    const joinedX=row?(i/segments-.5)*(bodyWidth+.036):x;
-    positions.push(joinedX,row?book.height/2-.10:crown,front-row*.19);
-    uvs.push(x/book.width+.5,crown/book.height+.5-row*.003);
-   }
-   if(i<segments){const a=i*2;indices.push(a,a+1,a+2,a+2,a+1,a+3);}
-  }
-  const geometry=new THREE.BufferGeometry();
-  geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-  geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
-  geometry.setIndex(indices);geometry.computeVertexNormals();return geometry;
- },[spineShape,book,bodyWidth]);
- useEffect(()=>()=>jacketShoulder?.dispose(),[jacketShoulder]);
  const spineSurface=useMemo(()=>{
   const inset=book.spineSilhouette?0:.026;
   const geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-.025,24,1);
@@ -110,16 +82,34 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[book,spineShape]);
  useEffect(()=>()=>spineSurface.dispose(),[spineSurface]);
  const w=book.width,h=book.height,d=book.depth;
+ const fittedCover=useMemo(()=>{
+  if(!photographedJacket)return null;
+  const depth=d-.02,height=h-.14;
+  const board=new THREE.BoxGeometry(.035,height,depth,1,1,40);
+  const face=new THREE.PlaneGeometry(depth,height,40,1);
+  for(const geometry of [board,face]){
+   const p=geometry.attributes.position;
+   for(let i=0;i<p.count;i++){
+    // Plane's left edge becomes the spine edge after its Y rotation.
+    const z=geometry===board?p.getZ(i):-p.getX(i);
+    if(p.getY(i)>0)p.setY(i,p.getY(i)-.09*Math.exp(-(depth/2-z)/.15));
+   }
+   geometry.computeVertexNormals();
+  }
+  return {board,face};
+ },[photographedJacket,d,h]);
+ useEffect(()=>()=>{fittedCover?.board.dispose();fittedCover?.face.dispose();},[fittedCover]);
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
  return <group ref={ref} position={[reader?0:book.x,0,0]} name={`book-${book.id}`}
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
    <mesh castShadow receiveShadow position={[0,h/2,bodyZ]}><boxGeometry args={[bodyWidth,bodyHeight,bodyDepth]}/><meshStandardMaterial map={maps.paper} roughness={.92}/></mesh>
-   {[-1,1].map(side=><RoundedBox key={side} args={[photographedJacket?.018:.045,h-(photographedJacket?.20:0),d-(photographedJacket?.02:0)]} radius={photographedJacket?.006:.014} smoothness={2} position={[side*(photographedJacket?(bodyWidth/2+.009):(w/2-.015)),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
-   <mesh position={[photographedJacket?bodyWidth/2+.019:w/2+.01,h/2,bodyZ]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[d-(photographedJacket?.02:.035),h-(photographedJacket?.20:.02)]}/><meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
+   {[-1,1].map(side=>photographedJacket?
+    <mesh key={side} geometry={fittedCover.board} position={[side*(bodyWidth/2+.0175),h/2+.03,bodyZ]} castShadow receiveShadow>{coverMaterial}</mesh>:
+    <RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
+   <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.01,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    {spineShape?<mesh position={[0,h/2,d/2-.04]} castShadow receiveShadow><extrudeGeometry args={[spineShape,{depth:.05,bevelEnabled:false,steps:1}]}/><meshStandardMaterial color={book.color} roughness={.8}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
-   {jacketShoulder&&<mesh geometry={jacketShoulder} position={[0,h/2,0]}><meshStandardMaterial map={spineMap} side={THREE.DoubleSide} roughness={.78}/></mesh>}
    <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent alphaTest={.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,pageTop+.001,bodyZ]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
