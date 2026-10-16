@@ -108,3 +108,7 @@ Artificial Intimacy is now removed at the user's request because no reference ph
 Added Julia Cameron's The Artist’s Way, A Spiritual Path to Higher Creativity (30th anniversary edition), using IMG_7716 full spine and IMG_7715 cover. IMG_7717/7718 provide detail references. Preserve the red spine, white lettering, small edge wear, cover creases and natural shading; masks exclude hands/backgrounds and the adjacent cover faces. Height 4.5 makes it taller than the other books, with a slim .36 width estimated from the photograph. Placed immediately after The Creative Act for a red accent between pale spines.
 
 User says they are working through it: display “Currently working through” in its reader and reading-list entry. No takeaways are invented. Reader framing accommodates the taller cover without clipping. Reproduce assets with `--zip12 <extracted-folder> --only the-artists-way`.
+
+## AI-first shelf order and no reading-status labels
+
+The user approved this order: AI for Good; If Anyone Builds It, Everyone Dies; Co-Intelligence; Empire of AI; The Infinity Machine; AI Needs You; The Coming Wave; Coachable; The Creative Act; The Artist’s Way; How Great Ideas Happen; Crisis Engineering. This puts AI-related titles first for mobile browsing. The user does not want read/currently-reading/currently-working-through labels: removed the Artist’s Way status and both status display locations. Do not reintroduce reading-status labels without a new request.
