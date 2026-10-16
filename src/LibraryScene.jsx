@@ -16,6 +16,30 @@ function configurePhotoTexture(texture){
  return texture;
 }
 
+// A small, bounded unsharp mask at display resolution restores local detail
+// without rewriting the photos or sharpening their transparent silhouettes.
+function sharpenPhoto(shader){
+ shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
+ #include <map_fragment>
+ #ifdef USE_MAP
+  vec2 dx=dFdx(vMapUv)*1.25;
+  vec2 dy=dFdy(vMapUv)*1.25;
+  vec4 leftSample=texture2D(map,vMapUv-dx);
+  vec4 rightSample=texture2D(map,vMapUv+dx);
+  vec4 downSample=texture2D(map,vMapUv-dy);
+  vec4 upSample=texture2D(map,vMapUv+dy);
+  vec3 surrounding=(leftSample.rgb+rightSample.rgb+downSample.rgb+upSample.rgb)*0.25;
+  float opaque=min(min(leftSample.a,rightSample.a),min(downSample.a,upSample.a));
+  vec3 detail=clamp(sampledDiffuseColor.rgb-surrounding,vec3(-0.045),vec3(0.045));
+  diffuseColor.rgb=clamp(diffuseColor.rgb+detail*0.75*smoothstep(0.95,1.0,opaque),0.0,1.0);
+ #endif
+ `);
+}
+function PhotographicMaterial({map,...props}){
+ return <meshBasicMaterial map={map} transparent toneMapped={false}
+  onBeforeCompile={sharpenPhoto} {...props}/>;
+}
+
 function Camera({reader=false,readerHeight=0}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
@@ -106,7 +130,7 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
   <primitive object={face} attach="geometry"/>
-  <meshBasicMaterial map={texture} transparent alphaTest={.1} toneMapped={false}/>
+  <PhotographicMaterial map={texture} alphaTest={.1}/>
  </mesh>;
 }
 export function Book(props){
@@ -271,7 +295,7 @@ function Bookend({side}){
  },[source,side]);
  return <group position={[side*bookendX,0,.34]} name={side<0?'left-agate-bookend':'right-agate-bookend'}>
   <mesh castShadow receiveShadow position={[0,0,.25]}><extrudeGeometry args={[shape,{depth:.31,bevelEnabled:true,bevelThickness:.003,bevelSize:.002,bevelSegments:2,steps:1}]}/><meshStandardMaterial color="#c3baa7" roughness={.94}/></mesh>
-  <mesh position={[0,1.225,.571]}><planeGeometry args={[1.7,2.45]}/><meshBasicMaterial map={face} transparent alphaTest={.32} toneMapped={false} depthWrite /></mesh>
+  <mesh position={[0,1.225,.571]}><planeGeometry args={[1.7,2.45]}/><PhotographicMaterial map={face} alphaTest={.32} depthWrite /></mesh>
  </group>;
 }
 function Lighting(){return <>
