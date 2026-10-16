@@ -45,3 +45,18 @@ Graphics fidelity check: two generated atlas attempts were inspected and NOT app
 The uploaded ZIP supplied IMG_7650.jpeg and IMG_7651.jpeg at 5712×4284. All fifteen reference spines now use perspective-rectified crops of these originals, with no image generation or graphic replacement. See spine-sources.json for source hashes, crop coordinates, assets and approximate relative model dimensions. scripts/extract-spines.py reproduces the extracts using Pillow and NumPy. Originals remain outside the published repository to avoid publishing the surrounding room; provide their directory as the script argument.
 
 The extracted pixels retain reflections, surface wear, typography and logos. Perspective correction interpolates pixels; it cannot recover details obscured by glare or hidden around a curved edge. Relative model measurements are visual estimates, not publisher-verified physical dimensions. Individual straight-on source files can refine these later. Existing supplied front covers remain; books without front covers open to their original spine. Artificial Intimacy remains after the fifteen reference books pending its own source photo.
+
+## Individual photos — ZIP 2 and ZIP 3 (October 16)
+
+The user rejected the group-photo replacements for the previously approved three books. Individual original photographs take precedence. Do not redraw typography, polish the jackets, remove ordinary wear, or invent graphics. Paper tops may be omitted explicitly at the user's request to avoid artificial binding gaps.
+
+ZIP 2: Converted cover IMG_7665, spine IMG_7666, detail checks IMG_7667/7668. If Anyone Builds It, Everyone Dies cover IMG_7669, spine IMG_7670, detail checks IMG_7671/7672.
+ZIP 3: The Creative Act cover IMG_7653, spine IMG_7654, detail checks IMG_7655/7656.
+
+`scripts/extract-individual-photos.py --zip2 <extracted-folder> --zip3 <extracted-folder> --zip4 <extracted-folder>` creates transparent photographic cutouts from original pixels using manually traced masks and perspective correction. It retains shading, color, wear and woven cloth. No image generation, smoothing or recoloring is involved. Ten `*-individual-*.webp` assets are the outputs.
+
+`photoPresentation` renders these photographic faces directly, without synthetic boards, collars or page tops. Shelf motion moves the photographic spine forward on hover; the reader shows the actual cover photograph with its aspect ratio. The existing photo contains the material shading; additional scene lighting must not bleach it. This is a photographic plane presentation, not a newly reconstructed 3D binding.
+
+AI for Good and Empire of AI use their earlier accepted image assets and crops again, pending individual originals. These earlier assets are derivatives, not newly extracted originals. Other group-photo books remain provisional until their individual photos arrive. Preserve the current order and relative sizes while replacing faces.
+
+ZIP 4: AI Needs You cover IMG_7657, spine IMG_7658, details IMG_7659/7660. The Coming Wave cover IMG_7661, spine IMG_7662, details IMG_7663/7664. Preserve photographed foil highlights; the hand and background are excluded from the spine cutout.

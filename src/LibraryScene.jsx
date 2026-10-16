@@ -21,7 +21,41 @@ function fittedSpineHead(y,height){
  const distance=height/2-y,band=.15;
  return distance>=0&&distance<band?height/2-band*Math.pow(distance/band,4):y;
 }
-export function Book({book,onOpen,reader=false,reducedMotion=false}){
+// The photograph supplies the binding, highlights and wear. Do not surround its
+// silhouette with synthetic boards or page tops that change the photographed book.
+function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
+ const ref=useRef();const [hovered,setHovered]=useState(false);
+ const {camera,invalidate,gl}=useThree();
+ const kind=reader&&book.coverImage?'cover':'spine';
+ const source=useTexture(book[kind+'Image']);
+ const texture=useMemo(()=>{
+  const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;
+  const [x=0,w=1,y=0,h=1]=book[kind+'Crop']??[];
+  t.offset.set(x,y);t.repeat.set(w,h);t.needsUpdate=true;return t;
+ },[source,book,kind]);
+ useEffect(()=>()=>texture.dispose(),[texture]);
+ useEffect(()=>{invalidate();},[hovered,invalidate]);
+ useEffect(()=>()=>{gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;},[gl]);
+ const width=kind==='cover'?book.height*(source.image.width*texture.repeat.x)/(source.image.height*texture.repeat.y):book.width;
+ useFrame((_,delta)=>{
+  if(!ref.current)return;
+  ref.current.quaternion.copy(camera.quaternion);
+  const target=reader?0:1.313+(hovered?.2:0);
+  ref.current.position.z=reducedMotion?target:THREE.MathUtils.lerp(ref.current.position.z,target,1-Math.exp(-delta*11));
+  if(Math.abs(ref.current.position.z-target)>.0005)invalidate();
+ });
+ return <mesh ref={ref} name={`book-${book.id}`} position={[reader?0:book.x,book.height/2,reader?0:1.313]}
+  onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
+  onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
+  onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
+  <planeGeometry args={[width,book.height]}/>
+  <meshBasicMaterial map={texture} transparent alphaTest={.1} toneMapped={false}/>
+ </mesh>;
+}
+export function Book(props){
+ return props.book.photoPresentation?<PhotographicBook {...props}/>:<ConstructedBook {...props}/>;
+}
+function ConstructedBook({book,onOpen,reader=false,reducedMotion=false}){
  const ref=useRef();const [hovered,setHovered]=useState(false);const {invalidate,gl}=useThree();
  const editionKeys=useMemo(()=>['spine','cover'].filter(key=>book[key+'Image']),[book]);
  const editionTextures=useTexture(editionKeys.map(key=>book[key+'Image']));

@@ -14,20 +14,25 @@ export const books = [
     "binding": "paper",
     "roughness": 0.72,
     "metalness": 0,
-    "spineImage": "/images/books/converted-source-spine.webp",
+    "spineImage": "/images/books/converted-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/converted-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=Converted%20Neil%20Hoyne",
-    "affiliate": false
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "the-coming-wave",
@@ -43,20 +48,25 @@ export const books = [
     "binding": "paper",
     "roughness": 0.34,
     "metalness": 0.12,
-    "spineImage": "/images/books/the-coming-wave-source-spine.webp",
+    "spineImage": "/images/books/the-coming-wave-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/the-coming-wave-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=The%20Coming%20Wave%20Mustafa%20Suleyman",
-    "affiliate": false
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "ai-needs-you",
@@ -72,20 +82,25 @@ export const books = [
     "binding": "paper",
     "roughness": 0.66,
     "metalness": 0,
-    "spineImage": "/images/books/ai-needs-you-source-spine.webp",
+    "spineImage": "/images/books/ai-needs-you-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/ai-needs-you-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=AI%20Needs%20You%20Verity%20Harding",
-    "affiliate": false
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "the-creative-act",
@@ -101,20 +116,25 @@ export const books = [
     "binding": "cloth",
     "roughness": 0.96,
     "metalness": 0,
-    "spineImage": "/images/books/the-creative-act-source-spine.webp",
+    "spineImage": "/images/books/the-creative-act-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/the-creative-act-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=The%20Creative%20Act%20Rick%20Rubin",
-    "affiliate": false
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "how-great-ideas-happen",
@@ -148,7 +168,7 @@ export const books = [
   {
     "id": "empire-of-ai",
     "title": "Empire of AI",
-    "subtitle": "Dreams and Nightmares in Sam Altman’s OpenAI",
+    "subtitle": "Dreams and Nightmares in Sam Altman\u2019s OpenAI",
     "author": "Karen Hao",
     "coverImage": "/images/books/empire-of-ai-cover-photo.webp",
     "coverCrop": [
@@ -157,10 +177,12 @@ export const books = [
       0.03226,
       0.92627
     ],
-    "spineImage": "/images/books/empire-of-ai-source-spine.webp",
+    "spineImage": "/images/books/empire-of-ai-spine-photo.webp",
     "spineCrop": [
-      0,
-      1
+      0.15804,
+      0.12629,
+      0.02673,
+      0.953
     ],
     "spineRelief": 0,
     "spineSilhouette": false,
@@ -179,15 +201,16 @@ export const books = [
     "affiliate": false,
     "roughness": 0.75,
     "metalness": 0,
-    "sourcePhoto": true
+    "sourcePhoto": true,
+    "photoPresentation": true
   },
   {
     "id": "if-anyone-builds-it",
     "title": "If Anyone Builds It, Everyone Dies",
     "subtitle": "",
     "author": "Eliezer Yudkowsky & Nate Soares",
-    "coverImage": "/images/books/if-anyone-builds-it-cover-photo.webp",
-    "spineImage": "/images/books/if-anyone-builds-it-source-spine.webp",
+    "coverImage": "/images/books/if-anyone-builds-it-individual-cover.webp",
+    "spineImage": "/images/books/if-anyone-builds-it-individual-spine.webp",
     "spineCrop": [
       0,
       1
@@ -208,7 +231,12 @@ export const books = [
     "roughness": 0.57,
     "metalness": 0,
     "spineSilhouette": false,
-    "sourcePhoto": true
+    "sourcePhoto": true,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "coachable",
@@ -245,10 +273,12 @@ export const books = [
     "subtitle": "How Real People Are Using Artificial Intelligence to Fix Things That Matter",
     "author": "Josh Tyrangiel",
     "coverImage": "/images/books/ai-for-good-cover-photo.webp",
-    "spineImage": "/images/books/ai-for-good-source-spine.webp",
+    "spineImage": "/images/books/ai-for-good-spine-blue.webp",
     "spineCrop": [
-      0,
-      1
+      0.3426,
+      0.322,
+      0.00735,
+      0.9874
     ],
     "spineRelief": 0,
     "spineSilhouette": false,
@@ -267,7 +297,8 @@ export const books = [
     "affiliate": false,
     "roughness": 0.76,
     "metalness": 0,
-    "sourcePhoto": true
+    "sourcePhoto": true,
+    "photoPresentation": true
   },
   {
     "id": "the-singularity-is-nearer",
