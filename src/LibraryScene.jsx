@@ -46,7 +46,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
    {[-1,1].map(side=><RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,0]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
    <mesh position={[w/2+.01,h/2,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[d-.035,h-.02]}/><meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    <RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>
-   <mesh position={[0,h/2,d/2+.013]}><planeGeometry args={[w-.026,h-.025]}/><meshStandardMaterial map={spineMap} roughness={.78} bumpMap={maps.bump} bumpScale={book.spineImage?.0003:.002}/></mesh>
+   <mesh position={[0,h/2,d/2+.013]}><planeGeometry args={[w-.026,h-.025]}/><meshStandardMaterial map={spineMap} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh position={[0,h-.045,-.02]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[w-.085,d-.09]}/><meshStandardMaterial map={maps.paper} roughness={1}/></mesh>
  </group>;
 }
