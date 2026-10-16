@@ -25,7 +25,7 @@ export default function App(){
  },[selected]);
  function readerKeys(event){if(event.altKey||event.ctrlKey||event.metaKey)return;if(event.key==='ArrowRight'){event.preventDefault();step(1);}if(event.key==='ArrowLeft'){event.preventDefault();step(-1);}}
  return <main className={`library ${book?'is-reading':''}`}>
-  <div className="library-topline"><span>KAIT HEDDERMAN</span><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The reading list <Arrow/></button></div>
+  <div className="library-topline"><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The reading list <Arrow/></button></div>
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <header className="library-heading"><h1 aria-label="Kait’s Library"><span className="title-owner">KAIT’S</span><span className="title-library">LIBRARY</span></h1></header>
    <div className="shelf-stage"><Suspense fallback={<div className="loading-label">Opening the library…</div>}><LibraryScene onOpen={openBook} reducedMotion={reducedMotion}/></Suspense></div>
