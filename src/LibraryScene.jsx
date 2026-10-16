@@ -16,6 +16,35 @@ function configurePhotoTexture(texture){
  return texture;
 }
 
+const clothMipCache=new WeakMap();
+function clothMipmaps(image){
+ if(clothMipCache.has(image))return clothMipCache.get(image);
+ const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
+ const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+ let pixels=ctx.getImageData(0,0,canvas.width,canvas.height),w=canvas.width,h=canvas.height;
+ const levels=[canvas],weights=[1,3,3,1];
+ // A four-tap low-pass before each reduction rejects the tiny thread frequencies
+ // that ordinary 2x2 GPU mip generation folds into visible checkerboard bands.
+ while(w>1||h>1){
+  const nw=Math.max(1,w>>1),nh=Math.max(1,h>>1);
+  const horizontal=new Float32Array(nw*h*4),next=new Uint8ClampedArray(nw*nh*4);
+  for(let y=0;y<h;y++)for(let x=0;x<nw;x++)for(let c=0;c<4;c++){
+   let sum=0;
+   for(let k=0;k<4;k++)sum+=pixels.data[(y*w+Math.max(0,Math.min(w-1,x*2+k-1)))*4+c]*weights[k];
+   horizontal[(y*nw+x)*4+c]=sum/8;
+  }
+  for(let y=0;y<nh;y++)for(let x=0;x<nw;x++)for(let c=0;c<4;c++){
+   let sum=0;
+   for(let k=0;k<4;k++)sum+=horizontal[(Math.max(0,Math.min(h-1,y*2+k-1))*nw+x)*4+c]*weights[k];
+   next[(y*nw+x)*4+c]=sum/8;
+  }
+  const level=document.createElement('canvas');level.width=nw;level.height=nh;
+  pixels=new ImageData(next,nw,nh);level.getContext('2d').putImageData(pixels,0,0);
+  levels.push(level);w=nw;h=nh;
+ }
+ clothMipCache.set(image,levels);return levels;
+}
+
 // A small, bounded unsharp mask at display resolution restores local detail
 // without rewriting the photos or sharpening their transparent silhouettes.
 function sharpenPhoto(shader){
@@ -67,7 +96,10 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   const t=configurePhotoTexture(source.clone());
   // Fine photographed weave aliases into coarse stripes when mip levels jump
   // or display sharpening amplifies the thread pattern. Filter cloth naturally.
-  if(clothSpine){t.minFilter=THREE.LinearMipmapLinearFilter;t.anisotropy=8;}
+  if(clothSpine){
+   t.minFilter=THREE.LinearMipmapLinearFilter;t.anisotropy=1;
+   t.mipmaps=clothMipmaps(source.image);t.generateMipmaps=false;
+  }
   const [x=0,w=1,y=0,h=1]=book[kind+'Crop']??[];
   t.offset.set(x,y);t.repeat.set(w,h);t.needsUpdate=true;return t;
  },[source,book,kind,clothSpine]);

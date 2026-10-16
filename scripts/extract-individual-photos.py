@@ -61,8 +61,13 @@ for id,kind,name,quad,poly in specs:
  im=ImageOps.exif_transpose(Image.open((args.zip12 if name in ['IMG_7715','IMG_7716'] else args.zip11 if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] else args.zip9 if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] else args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
  mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(round(x*scale),round(y*scale)) for x,y in poly],fill=255);im.putalpha(mask)
  h=2400;w=round(h*((np.linalg.norm(np.array(quad[0])-quad[1])+np.linalg.norm(np.array(quad[2])-quad[3]))/2)/((np.linalg.norm(np.array(quad[0])-quad[3])+np.linalg.norm(np.array(quad[1])-quad[2]))/2))
- dst=[(0,0),(w,0),(w,h),(0,h)];A=[];B=[]
+ # Rectifying dense cloth directly at export size aliases its thread pattern
+ # into broad grid bands. Supersample the warp, then low-pass downsample once.
+ supersample=3 if id=='the-creative-act' and kind=='spine' else 1
+ dst=[(0,0),(w*supersample,0),(w*supersample,h*supersample),(0,h*supersample)];A=[];B=[]
  for (x,y),(sx,sy) in zip(dst,quad):
   u,v=sx*scale,sy*scale;A.extend([[x,y,1,0,0,0,-u*x,-u*y],[0,0,0,x,y,1,-v*x,-v*y]]);B.extend([u,v])
- coeff=np.linalg.solve(A,B);res=im.transform((w,h),Image.Transform.PERSPECTIVE,coeff,Image.Resampling.BICUBIC);res.save(out/f'{id}-individual-{kind}.webp',quality=98,method=6)
+ coeff=np.linalg.solve(A,B);res=im.transform((w*supersample,h*supersample),Image.Transform.PERSPECTIVE,coeff,Image.Resampling.BICUBIC)
+ if supersample>1: res=res.resize((w,h),Image.Resampling.LANCZOS)
+ res.save(out/f'{id}-individual-{kind}.webp',quality=98,method=6)
  print(id,kind,w,h)
