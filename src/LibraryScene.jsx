@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useRef,useState,Suspense} from 'react';
 import {Canvas,useFrame,useThree} from '@react-three/fiber';
 import {Environment,Lightformer,ContactShadows,useTexture,RoundedBox} from '@react-three/drei';
 import * as THREE from 'three';
+import {TessellateModifier} from 'three/addons/modifiers/TessellateModifier.js';
 import {books,bookendX} from './library.js';
 import {bookTextures,disposeTextures} from './materials.js';
 
@@ -14,6 +15,11 @@ function Camera({reader=false}){
   camera.updateProjectionMatrix();invalidate();
  },[camera,size.width,size.height,reader,invalidate]);
  return null;
+}
+// Keep the photographed head gently rounded while bringing its corners into the binding.
+function fittedSpineHead(y,height){
+ const distance=height/2-y,band=.15;
+ return distance>=0&&distance<band?height/2-band*Math.pow(distance/band,4):y;
 }
 export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const ref=useRef();const [hovered,setHovered]=useState(false);const {invalidate,gl}=useThree();
@@ -62,7 +68,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   context.drawImage(image,x*image.width,(1-y-height)*image.height,width*image.width,height*image.height,0,0,160,768);
   const pixels=context.getImageData(0,0,160,768).data;const left=[],right=[];
   for(let row=0;row<768;row+=2){let first=-1,last=-1;
-   for(let col=0;col<160;col++){if(pixels[(row*160+col)*4+3]>160){if(first<0)first=col;last=col;}}
+   for(let col=0;col<160;col++){if(pixels[(row*160+col)*4+3]>245){if(first<0)first=col;last=col;}}
    if(last-first<20)continue;
    const py=(.5-row/767)*book.height;
    left.push(new THREE.Vector2((first/159-.5)*book.width,py));right.push(new THREE.Vector2((last/159-.5)*book.width,py));
@@ -71,12 +77,16 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[book,spineMap]);
  const spineSurface=useMemo(()=>{
   const inset=book.spineSilhouette?0:.026;
-  const geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-.025,24,1);
+  let geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-.025,24,1);
+  if(spineShape){const source=geometry;geometry=new TessellateModifier(.12,7).modify(source);source.dispose();}
   const vertices=geometry.attributes.position;const uv=geometry.attributes.uv;
   for(let i=0;i<vertices.count;i++){
    const x=vertices.getX(i)/((book.width-inset)/2);
    vertices.setZ(i,(book.spineRelief??0)*(1-x*x));
-   if(spineShape)uv.setXY(i,vertices.getX(i)/book.width+.5,vertices.getY(i)/book.height+.5);
+   if(spineShape){
+    uv.setXY(i,vertices.getX(i)/book.width+.5,vertices.getY(i)/book.height+.5);
+    vertices.setY(i,fittedSpineHead(vertices.getY(i),book.height));
+   }
   }
   geometry.computeVertexNormals();return geometry;
  },[book,spineShape]);
@@ -90,15 +100,15 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   if(outline[0].equals(outline[outline.length-1]))outline.pop();
   const positions=[],uvs=[],indices=[];const rings=8;
   const rearZ=d/2-.06;
-  const top=h/2-.04-.09*Math.exp(-.05/.15),bottom=-h/2+.10;
-  const cy=(top+bottom)/2,halfY=(top-bottom)/2,halfX=bodyWidth/2+.035;
+  const top=h/2-.04,bottom=-h/2+.10;
+  const cy=(top+bottom)/2,halfY=(top-bottom)/2,halfX=bodyWidth/2+.039;
   for(let i=0;i<outline.length;i++){
    const p=outline[i];
    const scale=Math.max(Math.abs(p.x)/halfX,Math.abs(p.y-cy)/halfY);
    const rearX=p.x/scale,rearY=cy+(p.y-cy)/scale;
    for(let j=0;j<=rings;j++){
     const t=j/rings,smooth=t*t*(3-2*t);
-    positions.push(THREE.MathUtils.lerp(p.x,rearX,smooth),THREE.MathUtils.lerp(p.y,rearY,smooth),THREE.MathUtils.lerp(d/2+.013,rearZ,t));
+    positions.push(THREE.MathUtils.lerp(p.x,rearX,smooth),THREE.MathUtils.lerp(fittedSpineHead(p.y,h),rearY,smooth),THREE.MathUtils.lerp(d/2+.013,rearZ,t));
     // Sample just inside the opaque photograph; carry its blue/white edge into the joint.
     uvs.push((p.x*.92)/w+.5,(p.y*.99)/h+.5);
     if(j<rings){const a=i*(rings+1)+j,b=((i+1)%outline.length)*(rings+1)+j;indices.push(a,b,a+1,a+1,b,b+1);}
@@ -120,7 +130,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
    for(let i=0;i<p.count;i++){
     // Plane's left edge becomes the spine edge after its Y rotation.
     const z=geometry===board?p.getZ(i):-p.getX(i);
-    if(p.getY(i)>0)p.setY(i,p.getY(i)-.09*Math.exp(-(depth/2-z)/.15));
+    if(p.getY(i)>0)p.setY(i,p.getY(i)-.012*Math.exp(-(depth/2-z)/.15));
    }
    geometry.computeVertexNormals();
   }
@@ -138,7 +148,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
     <RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
    <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.01,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    {jacketConnection?<mesh geometry={jacketConnection} position={[0,h/2,0]} castShadow receiveShadow><meshStandardMaterial map={spineMap} side={THREE.DoubleSide} roughness={.78}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
-   <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent alphaTest={.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
+   <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent={!photographedJacket} alphaTest={photographedJacket?0:.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,pageTop+.001,bodyZ]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
 }
