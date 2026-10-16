@@ -9,3 +9,14 @@
 .library-heading h1{word-spacing:.12em}
 
 body:has(.reading-room[open]){overflow:hidden}
+
+/* The transparent 3D canvas sits in front of the editorial title. */
+.shelf-section{isolation:isolate;margin-top:24px}
+.library-heading{position:absolute;inset:0 0 auto;padding:0;text-align:center;z-index:0;pointer-events:none}
+.library-heading h1{max-width:none;margin:0;font-family:Unbounded,Arial,sans-serif;font-weight:850;line-height:1;letter-spacing:-.06em;word-spacing:normal}
+.library-heading h1 .title-owner{display:block;color:#1e2523;font-size:clamp(28px,3.6vw,56px);letter-spacing:-.055em;margin-bottom:22px}
+.library-heading h1 .title-library{display:block;color:#687c76;font-size:clamp(40px,12.2vw,210px);line-height:1.05}
+.shelf-stage{position:relative;z-index:1;height:clamp(500px,72vh,860px);min-height:500px;padding-top:62px}
+.library-intro{position:relative;right:auto;bottom:auto;max-width:520px;margin:0 auto 22px;padding:0 24px;text-align:center;font-size:21px;line-height:1.3}
+.shelf-hint{margin:0 0 32px}
+@media(max-width:600px){.shelf-section{margin-top:34px}.library-heading{padding:0}.library-heading h1 .title-owner{font-size:28px;margin-bottom:25px}.library-heading h1 .title-library{font-size:12.2vw}.shelf-stage{height:390px;min-height:390px;padding-top:0}.library-intro{font-size:20px;max-width:330px;margin:0 auto 24px}.shelf-hint{font-size:6px}}
