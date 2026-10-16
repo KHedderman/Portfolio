@@ -35,9 +35,9 @@ function sharpenPhoto(shader){
  #endif
  `);
 }
-function PhotographicMaterial({map,...props}){
+function PhotographicMaterial({map,sharpen=true,...props}){
  return <meshBasicMaterial map={map} transparent toneMapped={false}
-  onBeforeCompile={sharpenPhoto} {...props}/>;
+  onBeforeCompile={sharpen?sharpenPhoto:undefined} {...props}/>;
 }
 
 function Camera({reader=false,readerHeight=0}){
@@ -61,12 +61,16 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
  const ref=useRef();const [hovered,setHovered]=useState(false);
  const {camera,invalidate,gl}=useThree();
  const kind=reader&&book.coverImage?'cover':'spine';
+ const clothSpine=kind==='spine'&&book.binding==='cloth';
  const source=useTexture(book[kind+'Image']);
  const texture=useMemo(()=>{
   const t=configurePhotoTexture(source.clone());
+  // Fine photographed weave aliases into coarse stripes when mip levels jump
+  // or display sharpening amplifies the thread pattern. Filter cloth naturally.
+  if(clothSpine){t.minFilter=THREE.LinearMipmapLinearFilter;t.anisotropy=8;}
   const [x=0,w=1,y=0,h=1]=book[kind+'Crop']??[];
   t.offset.set(x,y);t.repeat.set(w,h);t.needsUpdate=true;return t;
- },[source,book,kind]);
+ },[source,book,kind,clothSpine]);
  useEffect(()=>()=>texture.dispose(),[texture]);
  useEffect(()=>{invalidate();},[hovered,invalidate]);
  useEffect(()=>()=>{gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;},[gl]);
@@ -130,7 +134,7 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
   <primitive object={face} attach="geometry"/>
-  <PhotographicMaterial map={texture} alphaTest={.1}/>
+  <PhotographicMaterial map={texture} sharpen={!clothSpine} alphaTest={.1}/>
  </mesh>;
 }
 export function Book(props){
