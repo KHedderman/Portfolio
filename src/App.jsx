@@ -26,7 +26,7 @@ export default function App(){
  function readerKeys(event){if(event.altKey||event.ctrlKey||event.metaKey)return;if(event.key==='ArrowRight'){event.preventDefault();step(1);}if(event.key==='ArrowLeft'){event.preventDefault();step(-1);}}
  return <main className={`library ${book?'is-reading':''}`}>
   <div className="library-topline"><span>KAIT HEDDERMAN</span><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The reading list <Arrow/></button></div>
-  <header className="library-heading"><p className="small-label">A PERSONAL LIBRARY</p><h1>WHAT KAIT<br/><span>IS READING.</span></h1><p className="library-intro">Books shaping how I think about<br className="desktop-break"/> AI, design, and being human.</p></header>
+  <header className="library-heading"><p className="small-label">A PERSONAL LIBRARY</p><h1>KAIT<br/><span>IS READING…</span></h1><p className="library-intro">Books shaping how I think about<br className="desktop-break"/> AI, design, and being human.</p></header>
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <div className="shelf-stage"><Suspense fallback={<div className="loading-label">Opening the library…</div>}><LibraryScene onOpen={openBook} reducedMotion={reducedMotion}/></Suspense></div>
    <p id="shelf-hint" className="shelf-hint"><span className="hint-dot"/> SELECT A SPINE. STEP INTO THE MARGINS.</p>
