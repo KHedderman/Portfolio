@@ -414,8 +414,8 @@ export const books = [
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=Co-Intelligence%20Ethan%20Mollick",
     "affiliate": false,
-    "spineImage": "/images/books/co-intelligence-source-spine.webp",
-    "coverImage": null,
+    "spineImage": "/images/books/co-intelligence-individual-spine.webp",
+    "coverImage": "/images/books/co-intelligence-individual-cover.webp",
     "roughness": 0.68,
     "metalness": 0,
     "spineCrop": [
@@ -423,7 +423,13 @@ export const books = [
       1
     ],
     "spineSilhouette": false,
-    "sourcePhoto": true
+    "sourcePhoto": true,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "supremacy",
@@ -439,20 +445,26 @@ export const books = [
     "binding": "paper",
     "roughness": 0.4,
     "metalness": 0,
-    "spineImage": "/images/books/supremacy-source-spine.webp",
+    "spineImage": "/images/books/supremacy-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/supremacy-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=Supremacy%20Parmy%20Olson",
-    "affiliate": false
+    "affiliate": false,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "crisis-engineering",
