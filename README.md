@@ -47,3 +47,5 @@ The heading is Kait’s Library: Unbounded lettering in claret (#854052), with a
 The reader now has one Reading takeaways section, with “Reading takeaways to come.” until Kait supplies her reflections. Legacy notes are displayed in the same section; there are no separate notes or questions tabs. “Get the book” links appear above and below the content. Both still open Bookshop.org search results, with wording about supporting independent bookstores. Exact edition URLs remain pending.
 
 The If Anyone Builds It spine now uses an image-tool-prepared derivative of Kait’s supplied spine photograph, with narrower proportions. Its front cover is still provisional. The texture uses UV cropping to exclude the surrounding black margins; it is not an untouched scan.
+
+Kait subsequently supplied the front cover and requested pristine surfaces for all books. If Anyone Builds It now uses image-tool-cleaned cover and spine derivatives without visible scratches, dust or scuffs. Fine material relief is reduced on photographic artwork. Preserve this clean condition when preparing future book textures.
