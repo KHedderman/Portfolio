@@ -6,14 +6,14 @@ import {TessellateModifier} from 'three/addons/modifiers/TessellateModifier.js';
 import {books,bookendX,shelfFramingHeight} from './library.js';
 import {bookTextures,disposeTextures} from './materials.js';
 
-function Camera({reader=false}){
+function Camera({reader=false,readerHeight=0}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
   camera.position.set(reader?3.9:0,reader?2.6:Math.max(1.9,...books.map(book=>book.height/2)),reader?9:12);
-  camera.lookAt(0,reader?1.8:Math.max(1.9,...books.map(book=>book.height/2)),0);
-  camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/shelfFramingHeight);
+  camera.lookAt(0,reader?(readerHeight>4.1?readerHeight/2:1.8):Math.max(1.9,...books.map(book=>book.height/2)),0);
+  camera.zoom=reader?Math.min(size.width/3.6,size.height/Math.max(4.9,readerHeight+.8)):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/shelfFramingHeight);
   camera.updateProjectionMatrix();invalidate();
- },[camera,size.width,size.height,reader,invalidate]);
+ },[camera,size.width,size.height,reader,readerHeight,invalidate]);
  return null;
 }
 // Keep the photographed head gently rounded while bringing its corners into the binding.
@@ -276,7 +276,7 @@ books.forEach(book=>{const urls=[book.spineImage,book.coverImage].filter(Boolean
 useTexture.preload('/images/agate-bookends.webp');
 function World({onOpen,reducedMotion,readerBook}){
  return <>
- <Camera reader={!!readerBook}/><Lighting/>
+ <Camera reader={!!readerBook} readerHeight={readerBook?.height??0}/><Lighting/>
  {!readerBook&&books.slice(0,-1).map((book,i)=>{
   const height=Math.min(book.height,books[i+1].height)-.16;
   // A recessed contact shadow closes tiny irregular jacket seams without

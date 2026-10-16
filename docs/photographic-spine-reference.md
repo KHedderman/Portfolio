@@ -102,3 +102,9 @@ The user subsequently requested restoring The Coming Wave. Its complete individu
 The user requested swapping The Coming Wave with If Anyone Builds It, Everyone Dies. The latter is now the leftmost book; The Coming Wave is between Empire of AI and Coachable. AI Needs You remains; no removal was requested in this change. Photographs and dimensions are unchanged.
 
 Artificial Intimacy is now removed at the user's request because no reference photos are available. The active library contains 11 books. AI Needs You was also moved immediately before Co-Intelligence in the preceding update. Restore Artificial Intimacy only on request, after verifying its exact title/author and receiving suitable images.
+
+## ZIP 12 — The Artist’s Way
+
+Added Julia Cameron's The Artist’s Way, A Spiritual Path to Higher Creativity (30th anniversary edition), using IMG_7716 full spine and IMG_7715 cover. IMG_7717/7718 provide detail references. Preserve the red spine, white lettering, small edge wear, cover creases and natural shading; masks exclude hands/backgrounds and the adjacent cover faces. Height 4.5 makes it taller than the other books, with a slim .36 width estimated from the photograph. Placed immediately after The Creative Act for a red accent between pale spines.
+
+User says they are working through it: display “Currently working through” in its reader and reading-list entry. No takeaways are invented. Reader framing accommodates the taller cover without clipping. Reproduce assets with `--zip12 <extracted-folder> --only the-artists-way`.

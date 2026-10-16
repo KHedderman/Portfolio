@@ -59,7 +59,7 @@ export default function App(){
   </section>
   <section id="reading-index" className={`reading-index ${indexOpen?'is-open':''}`} aria-label="Browse every title" hidden={!indexOpen}>
    <div className="index-heading"><h2>On the shelf</h2><button onClick={()=>setIndexOpen(false)} aria-label="Close reading list">×</button></div>
-   <ol>{books.map((b,i)=><li key={b.id}><button onClick={()=>openBook(b.id)}><span className="index-number">{String(i+1).padStart(2,'0')}</span><span className="mini-spine" style={{background:b.color}}/><span><strong>{b.title}</strong><small>{b.author}</small></span><Arrow/></button></li>)}</ol>
+   <ol>{books.map((b,i)=><li key={b.id}><button onClick={()=>openBook(b.id)}><span className="index-number">{String(i+1).padStart(2,'0')}</span><span className="mini-spine" style={{background:b.color}}/><span><strong>{b.title}</strong><small>{b.author}</small>{b.readingStatus&&<small>{b.readingStatus}</small>}</span><Arrow/></button></li>)}</ol>
   </section>
   <dialog ref={dialog} className="reading-room" onCancel={event=>{event.preventDefault();closeBook();}} onClose={()=>{if(selected)setSelected(null);}} onKeyDown={readerKeys} aria-labelledby="reading-title">
    {book&&<>
@@ -67,7 +67,7 @@ export default function App(){
     <div className="reader-layout">
      <aside className="reader-object" aria-label={`Three-dimensional view of ${book.title}`}><Suspense fallback={<div className="loading-label">Opening the book…</div>}><LibraryScene readerBook={book} reducedMotion={reducedMotion}/></Suspense><span className="object-caption">FROM KAIT’S READING SHELF</span></aside>
      <article className="reader-content">
-      <span className="small-label">{book.topic}</span><h2 id="reading-title">{book.title}</h2><p className="book-author">{book.author}</p>
+      <span className="small-label">{book.topic}</span><h2 id="reading-title">{book.title}</h2><p className="book-author">{book.author}</p>{book.readingStatus&&<p className="small-label">{book.readingStatus}</p>}
       {book.subtitle&&<p className="book-subtitle">{book.subtitle}</p>}
       <div className="reading-section-heading"><h3 id="takeaways-heading">Reading takeaways</h3><a className="get-book-top" href={book.purchaseUrl} target="_blank" rel="noopener noreferrer">Get the book <Arrow/></a></div>
       <section id="notes-panel" aria-labelledby="takeaways-heading"><Notes book={book}/></section>

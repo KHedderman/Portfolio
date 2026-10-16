@@ -69,6 +69,39 @@ export const books = [
     "photoPresentation": true
   },
   {
+    "id": "the-artists-way",
+    "title": "The Artist’s Way",
+    "author": "Julia Cameron",
+    "subtitle": "A Spiritual Path to Higher Creativity",
+    "readingStatus": "Currently working through",
+    "color": "#a32446",
+    "ink": "#fff4dd",
+    "topic": "Creativity & practice",
+    "height": 4.5,
+    "width": 0.36,
+    "depth": 3.5,
+    "binding": "paper",
+    "spineImage": "/images/books/the-artists-way-individual-spine.webp",
+    "coverImage": "/images/books/the-artists-way-individual-cover.webp",
+    "spineCrop": [
+      0,
+      1
+    ],
+    "coverCrop": [
+      0,
+      1
+    ],
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "sourcePhoto": true,
+    "bibliographyConfirmed": true,
+    "notes": [],
+    "takeaways": [],
+    "questions": [],
+    "purchaseUrl": "https://bookshop.org/search?keywords=The%20Artist%27s%20Way%20Julia%20Cameron",
+    "affiliate": false
+  },
+  {
     "id": "how-great-ideas-happen",
     "title": "How Great Ideas Happen",
     "author": "George Newman",

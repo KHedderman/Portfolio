@@ -10,6 +10,7 @@ parser.add_argument("--zip5",type=Path)
 parser.add_argument("--zip8",type=Path)
 parser.add_argument("--zip9",type=Path)
 parser.add_argument("--zip11",type=Path)
+parser.add_argument("--zip12",type=Path)
 parser.add_argument("--only",nargs="*")
 args=parser.parse_args()
 out=Path(__file__).resolve().parents[1]/'public/images/books'
@@ -47,13 +48,17 @@ specs += [
 ('the-infinity-machine','cover','IMG_7706',[(84,70),(784,41),(831,1136),(96,1140)],[(85,83),(92,73),(143,68),(773,42),(782,46),(787,62),(830,1126),(825,1133),(787,1137),(509,1143),(188,1141),(103,1134),(97,1128)]),
 ('the-singularity-is-nearer','spine','IMG_7711',[(390,62),(536,68),(518,1117),(352,1111)],[(393,91),(400,76),(412,67),(423,62),(437,68),(455,70),(481,70),(494,74),(516,74),(526,79),(531,74),(535,88),(530,325),(524,685),(517,1087),(510,1101),(504,1113),(473,1116),(398,1111),(369,1105),(359,1096),(353,1080),(364,781),(380,380)]),
 ('the-singularity-is-nearer','cover','IMG_7710',[(83,71),(759,57),(804,1131),(74,1135)],[(84,84),(90,74),(172,68),(439,59),(738,58),(752,61),(759,70),(803,1114),(798,1130),(364,1136),(79,1133),(75,1125)])]
+specs += [
+('the-artists-way','spine','IMG_7716',[(477,52),(558,55),(578,1171),(493,1171)],[(478,59),(484,54),(506,53),(523,55),(533,54),(540,58),(547,56),(555,59),(558,69),(565,572),(577,1154),(574,1167),(558,1170),(539,1170),(526,1168),(512,1171),(499,1169),(495,1163),(490,790),(483,350)]),
+('the-artists-way','cover','IMG_7715',[(82,113),(805,102),(830,1012),(82,1018)],[(83,126),(102,120),(143,112),(191,109),(266,111),(345,115),(476,111),(792,102),(802,104),(805,114),(829,1006),(825,1010),(521,1017),(184,1019),(111,1012),(86,1005)])]
 for id,kind,name,quad,poly in specs:
+ if name in ['IMG_7715','IMG_7716'] and not args.zip12: continue
  if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] and not args.zip11: continue
  if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] and not args.zip9: continue
  if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] and not args.zip8: continue
  if name in ['IMG_7673','IMG_7677','IMG_7678'] and not args.zip5: continue
  if args.only and id not in args.only: continue
- im=ImageOps.exif_transpose(Image.open((args.zip11 if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] else args.zip9 if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] else args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
+ im=ImageOps.exif_transpose(Image.open((args.zip12 if name in ['IMG_7715','IMG_7716'] else args.zip11 if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] else args.zip9 if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] else args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
  mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(round(x*scale),round(y*scale)) for x,y in poly],fill=255);im.putalpha(mask)
  h=1800;w=round(h*((np.linalg.norm(np.array(quad[0])-quad[1])+np.linalg.norm(np.array(quad[2])-quad[3]))/2)/((np.linalg.norm(np.array(quad[0])-quad[3])+np.linalg.norm(np.array(quad[1])-quad[2]))/2))
  dst=[(0,0),(w,0),(w,h),(0,h)];A=[];B=[]
