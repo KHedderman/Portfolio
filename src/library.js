@@ -1,6 +1,40 @@
 // Photographic spines are rectified original pixels; provenance: docs/spine-sources.json.
 export const books = [
   {
+    "id": "the-coming-wave",
+    "title": "The Coming Wave",
+    "author": "Mustafa Suleyman",
+    "subtitle": "",
+    "color": "#b2b4c4",
+    "ink": "#181a19",
+    "topic": "The future of AI",
+    "height": 3.73,
+    "width": 0.46,
+    "depth": 2.45,
+    "binding": "paper",
+    "roughness": 0.34,
+    "metalness": 0.12,
+    "spineImage": "/images/books/the-coming-wave-individual-spine.webp",
+    "spineCrop": [
+      0,
+      1
+    ],
+    "spineSilhouette": false,
+    "sourcePhoto": true,
+    "coverImage": "/images/books/the-coming-wave-individual-cover.webp",
+    "bibliographyConfirmed": true,
+    "notes": [],
+    "takeaways": [],
+    "questions": [],
+    "purchaseUrl": "https://bookshop.org/search?keywords=The%20Coming%20Wave%20Mustafa%20Suleyman",
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
+  },
+  {
     "id": "ai-needs-you",
     "title": "AI Needs You",
     "author": "Verity Harding",
