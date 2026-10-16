@@ -20,3 +20,13 @@ body:has(.reading-room[open]){overflow:hidden}
 .library-intro{position:relative;right:auto;bottom:auto;max-width:none;width:88%;margin:0 auto 24px;padding:0;text-align:left;font-size:clamp(14px,1.8vw,26px);line-height:1.3;white-space:nowrap}
 .shelf-hint{margin:0 0 32px}
 @media(max-width:600px){.shelf-section{margin-top:30px}.library-heading{padding:0}.library-heading h1 .title-owner{font-size:10vw;margin-bottom:10px}.shelf-stage{height:280px;margin-top:-54px}.library-intro{font-size:clamp(10px,2.9vw,17px);margin-bottom:24px}.shelf-hint{font-size:6px}}
+
+/* Scroll the physical shelf instead of shrinking the books on narrow screens. */
+.shelf-viewport{position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;margin-top:clamp(-110px,-7vw,-28px);overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#a4afa6 transparent}
+.shelf-viewport:focus-visible{outline:2px solid #718d87;outline-offset:-3px}
+.shelf-stage{width:max(100%,var(--shelf-width));margin-top:0}
+.shelf-scroll-controls{display:flex;align-items:center;justify-content:space-between;width:88%;margin:8px auto 16px;color:#5f6860}
+.shelf-scroll-controls span{font:italic 18px Cormorant,Georgia,serif}
+.shelf-scroll-controls button{display:grid;place-items:center;width:46px;height:44px;border:1px solid #9ca99e;border-radius:50%;font:24px Arial,sans-serif}
+.shelf-scroll-controls button:disabled{opacity:.25;cursor:default}
+@media(max-width:600px){.shelf-viewport{margin-top:-32px}.shelf-stage{height:440px;margin-top:0}.library-intro{font-size:19px;white-space:normal;line-height:1.3}.shelf-hint{font-size:7px;letter-spacing:1px}}

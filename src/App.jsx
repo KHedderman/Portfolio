@@ -1,5 +1,5 @@
 import React,{Suspense,lazy,useEffect,useRef,useState} from 'react';
-import {books} from './library.js';
+import {books,bookendX} from './library.js';
 import './style.css';
 const LibraryScene=lazy(()=>import('./LibraryScene.jsx'));
 const Arrow=()=> <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" fill="none" stroke="currentColor" strokeWidth="1.2"/></svg>;
@@ -10,6 +10,24 @@ function Notes({book,tab}){
  const items=book[tab];
  if(items.length)return <div className="note-prose">{items.map((note,i)=><p key={i}>{note}</p>)}</div>;
  return <div className="empty-notes"><span className="small-label">A PAGE STILL TAKING SHAPE</span><p>{tab==='notes'?'Reading notes to come.':tab==='takeaways'?'Takeaways to come.':'Questions to come.'}</p></div>;
+}
+function Shelf({onOpen,reducedMotion}){
+ const viewport=useRef();const stage=useRef();
+ const [scroll,setScroll]=useState({overflow:false,left:false,right:false});
+ useEffect(()=>{
+  const element=viewport.current;
+  const update=()=>{const end=element.scrollWidth-element.clientWidth;setScroll({overflow:end>2,left:element.scrollLeft>2,right:element.scrollLeft<end-2});};
+  const observer=new ResizeObserver(update);observer.observe(element);observer.observe(stage.current);
+  element.addEventListener('scroll',update,{passive:true});update();
+  return()=>{observer.disconnect();element.removeEventListener('scroll',update);};
+ },[]);
+ function move(direction){const element=viewport.current;element.scrollBy({left:direction*element.clientWidth*.7,behavior:reducedMotion?'instant':'smooth'});}
+ return <>
+  <div ref={viewport} id="shelf-scroll" className="shelf-viewport" tabIndex={scroll.overflow?0:undefined} role="region" aria-label="Bookshelf: scroll horizontally to explore" onKeyDown={event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();move(event.key==='ArrowRight'?1:-1);}}}>
+   <div ref={stage} className="shelf-stage" style={{'--shelf-width':`${Math.max(780,(bookendX*2+2.5)*110)}px`}}><Suspense fallback={<div className="loading-label">Opening the library…</div>}><LibraryScene onOpen={onOpen} reducedMotion={reducedMotion}/></Suspense></div>
+  </div>
+  {scroll.overflow&&<nav className="shelf-scroll-controls" aria-label="Explore the bookshelf"><button aria-label="Scroll toward left bookend" aria-controls="shelf-scroll" disabled={!scroll.left} onClick={()=>move(-1)}>←</button><span>Explore the shelf</span><button aria-label="Scroll toward right bookend" aria-controls="shelf-scroll" disabled={!scroll.right} onClick={()=>move(1)}>→</button></nav>}
+ </>;
 }
 export default function App(){
  const [selected,setSelected]=useState(fromHash);const [tab,setTab]=useState('notes');const [indexOpen,setIndexOpen]=useState(false);
@@ -28,7 +46,7 @@ export default function App(){
   <div className="library-topline"><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The reading list <Arrow/></button></div>
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <header className="library-heading"><h1 aria-label="Kait’s Library"><span className="title-owner">KAIT’S</span><span className="title-library">LIBRARY</span></h1></header>
-   <div className="shelf-stage"><Suspense fallback={<div className="loading-label">Opening the library…</div>}><LibraryScene onOpen={openBook} reducedMotion={reducedMotion}/></Suspense></div>
+   <Shelf onOpen={openBook} reducedMotion={reducedMotion}/>
    <p className="library-intro">Books shaping how I think about AI, design, and being human.</p>
    <p id="shelf-hint" className="shelf-hint"><span className="hint-dot"/> SELECT A SPINE. STEP INTO THE MARGINS.</p>
   </section>
