@@ -48,11 +48,12 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[book.width,book.depth]);
  useEffect(()=>()=>pageHead.dispose(),[pageHead]);
  const spineSurface=useMemo(()=>{
-  const geometry=new THREE.PlaneGeometry(book.width-.026,book.height-.025,24,1);
+  const inset=book.spineFullBleed?.004:.026;
+  const geometry=new THREE.PlaneGeometry(book.width-inset,book.height-(book.spineFullBleed?.004:.025),24,1);
   const vertices=geometry.attributes.position;
-  for(let i=0;i<vertices.count;i++){const x=vertices.getX(i)/((book.width-.026)/2);vertices.setZ(i,(book.spineRelief??0)*(1-x*x));}
+  for(let i=0;i<vertices.count;i++){const x=vertices.getX(i)/((book.width-inset)/2);vertices.setZ(i,(book.spineRelief??0)*(1-x*x));}
   geometry.computeVertexNormals();return geometry;
- },[book.width,book.height,book.spineRelief]);
+ },[book.width,book.height,book.spineRelief,book.spineFullBleed]);
  useEffect(()=>()=>spineSurface.dispose(),[spineSurface]);
  const w=book.width,h=book.height,d=book.depth;
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
