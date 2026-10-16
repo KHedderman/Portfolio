@@ -14,12 +14,12 @@ body:has(.reading-room[open]){overflow:hidden}
 .shelf-section{isolation:isolate;margin-top:24px}
 .library-heading{position:relative;inset:auto;padding:0;width:88%;margin:0 auto;text-align:left;z-index:0;pointer-events:none}
 .library-heading h1{max-width:none;margin:0;font-family:Unbounded,Arial,sans-serif;font-weight:850;line-height:1;letter-spacing:-.06em;word-spacing:normal}
-.library-heading h1 .title-owner{display:block;color:#1e2523;font-size:clamp(40px,7vw,112px);letter-spacing:-.055em;margin-bottom:10px}
+.library-heading h1 .title-owner{display:block;color:#1e2523;font-size:clamp(40px,7vw,112px);letter-spacing:-.055em;margin-bottom:0;line-height:.88}
 .library-heading h1 .title-library{display:block;color:#854052;font-size:15vw;line-height:1.05}
 .shelf-stage{position:relative;z-index:1;height:clamp(440px,58vh,680px);min-height:0;margin-top:clamp(-110px,-7vw,-28px);padding-top:0}
 .library-intro{position:relative;right:auto;bottom:auto;max-width:none;width:88%;margin:0 auto 24px;padding:0;text-align:left;font-size:clamp(14px,1.8vw,26px);line-height:1.3;white-space:nowrap}
 .shelf-hint{margin:0 0 32px}
-@media(max-width:600px){.shelf-section{margin-top:30px}.library-heading{padding:0}.library-heading h1 .title-owner{font-size:10vw;margin-bottom:10px}.shelf-stage{height:280px;margin-top:-54px}.library-intro{font-size:clamp(10px,2.9vw,17px);margin-bottom:24px}.shelf-hint{font-size:6px}}
+@media(max-width:600px){.shelf-section{margin-top:30px}.library-heading{padding:0}.library-heading h1 .title-owner{font-size:10vw;margin-bottom:0}.shelf-stage{height:280px;margin-top:-54px}.library-intro{font-size:clamp(10px,2.9vw,17px);margin-bottom:24px}.shelf-hint{font-size:6px}}
 
 /* Scroll the physical shelf instead of shrinking the books on narrow screens. */
 .shelf-viewport{position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;margin-top:clamp(-110px,-7vw,-28px);overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#a4afa6 transparent}
