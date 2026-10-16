@@ -35,7 +35,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  useFrame((_,delta)=>{
   if(!ref.current)return;
   const targetZ=reader ? 0 : (hovered ? .2 : 0);
-  const targetY=reader?-1.15:hovered?-.035:0;
+  const targetY=reader?-1.15:(book.shelfYaw??(hovered?-.035:0));
   if(reducedMotion){ref.current.position.z=targetZ;ref.current.rotation.y=targetY;return;}
   const a=1-Math.exp(-delta*11);
   ref.current.position.z=THREE.MathUtils.lerp(ref.current.position.z,targetZ,a);
@@ -138,7 +138,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[photographedJacket,d,h]);
  useEffect(()=>()=>{fittedCover?.board.dispose();fittedCover?.face.dispose();},[fittedCover]);
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
- return <group ref={ref} position={[reader?0:book.x,0,0]} name={`book-${book.id}`}
+ return <group ref={ref} position={[reader?0:book.x-Math.sin(book.shelfYaw??0)*book.depth/2,0,0]} name={`book-${book.id}`}
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
