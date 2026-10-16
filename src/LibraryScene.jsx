@@ -23,9 +23,9 @@ function fittedSpineHead(y,height){
 }
 export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const ref=useRef();const [hovered,setHovered]=useState(false);const {invalidate,gl}=useThree();
- const maps=useMemo(()=>bookTextures(book),[book]);
  const editionKeys=useMemo(()=>['spine','cover'].filter(key=>book[key+'Image']),[book]);
  const editionTextures=useTexture(editionKeys.map(key=>book[key+'Image']));
+ const maps=useMemo(()=>bookTextures(book),[book]);
  useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;const crop=book[editionKeys[i]+'Crop'];if(crop){texture.offset.x=crop[0];texture.repeat.x=crop[1];texture.offset.y=crop[2]??0;texture.repeat.y=crop[3]??1;}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
  const spineMap=book.spineImage?editionTextures[editionKeys.indexOf('spine')]:maps.spine;
  const coverMap=book.coverImage?editionTextures[editionKeys.indexOf('cover')]:maps.cover;
@@ -35,7 +35,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  useFrame((_,delta)=>{
   if(!ref.current)return;
   const targetZ=reader?0:1.3-book.depth/2+(hovered?.2:0);
-  const targetY=reader?-1.15:(hovered?-.035:0);
+  const targetY=reader?(book.coverImage?-1.15:.408):(hovered?-.035:0);
   if(reducedMotion){ref.current.position.z=targetZ;ref.current.rotation.y=targetY;return;}
   const a=1-Math.exp(-delta*11);
   ref.current.position.z=THREE.MathUtils.lerp(ref.current.position.z,targetZ,a);
@@ -77,8 +77,8 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   const shape=new THREE.Shape([...left,...right.reverse()]);shape.closePath();return shape;
  },[book,spineMap]);
  const spineSurface=useMemo(()=>{
-  const inset=book.spineSilhouette?0:.026;
-  let geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-.025,24,1);
+  const inset=book.spineSilhouette||book.sourcePhoto?0:.026;
+  let geometry=spineShape?new THREE.ShapeGeometry(spineShape):new THREE.PlaneGeometry(book.width-inset,book.height-(book.sourcePhoto?.008:.025),24,1);
   if(spineShape){const source=geometry;geometry=new TessellateModifier(.12,7).modify(source);source.dispose();}
   const vertices=geometry.attributes.position;const uv=geometry.attributes.uv;
   for(let i=0;i<vertices.count;i++){
@@ -138,7 +138,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   return {board,face};
  },[photographedJacket,d,h]);
  useEffect(()=>()=>{fittedCover?.board.dispose();fittedCover?.face.dispose();},[fittedCover]);
- const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
+ const coverMaterial=<meshStandardMaterial color={book.color} roughness={book.roughness??.78} metalness={book.metalness??0} bumpMap={maps.bump} bumpScale={book.binding==='cloth'?.003:.0005}/>;
  return <group ref={ref} position={[reader?0:book.x,0,reader?0:1.3-book.depth/2]} name={`book-${book.id}`}
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
@@ -149,7 +149,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
     <RoundedBox key={side} args={[.025,h,d]} radius={.01} smoothness={2} position={[side*(w/2-.0125),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
    <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.001,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    {jacketConnection?<mesh geometry={jacketConnection} position={[0,h/2,0]} castShadow receiveShadow><meshStandardMaterial map={spineMap} side={THREE.DoubleSide} roughness={.78}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
-   <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent={!photographedJacket} alphaTest={photographedJacket?0:.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
+   <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent={!photographedJacket} alphaTest={photographedJacket?0:.4} roughness={book.roughness??.78} metalness={book.metalness??0} bumpMap={maps.bump} bumpScale={book.binding==='cloth'?.003:.0005}/></mesh>
    <mesh geometry={pageHead} position={[0,pageTop+.001,bodyZ]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
 }
@@ -191,9 +191,12 @@ function Lighting(){return <>
   <Lightformer form="rect" intensity={1} color="#eaf2f1" position={[5,3,2]} rotation={[0,-Math.PI/3,0]} scale={[3,4,1]}/>
  </Environment>
  </>;}
-function World({onOpen,reducedMotion,readerBook}){return <>
+books.forEach(book=>{const urls=[book.spineImage,book.coverImage].filter(Boolean);if(urls.length)useTexture.preload(urls);});
+useTexture.preload('/images/agate-bookends.webp');
+function World({onOpen,reducedMotion,readerBook}){
+ return <>
  <Camera reader={!!readerBook}/><Lighting/>
- {readerBook?<Book key={readerBook.id} book={readerBook} reader reducedMotion={reducedMotion}/>:<Suspense fallback={null}><Bookend side={-1}/>{books.map(book=><Book key={book.id} book={book} onOpen={onOpen} reducedMotion={reducedMotion}/>)}<Bookend side={1}/></Suspense>}
+ {readerBook?<Book key={readerBook.id} book={readerBook} reader reducedMotion={reducedMotion}/>:<Suspense fallback={null}><Bookend side={-1}/>{books.map(book=><Suspense key={book.id} fallback={null}><Book book={book} onOpen={onOpen} reducedMotion={reducedMotion}/></Suspense>)}<Bookend side={1}/></Suspense>}
  <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[200,200]}/><shadowMaterial transparent opacity={.08}/></mesh>
  <ContactShadows position={[0,.002,0]} opacity={.25} scale={14} blur={2.6} far={5} resolution={256} frames={Infinity}/>
  </>;}

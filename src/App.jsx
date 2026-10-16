@@ -59,11 +59,11 @@ export default function App(){
   </section>
   <section id="reading-index" className={`reading-index ${indexOpen?'is-open':''}`} aria-label="Browse every title" hidden={!indexOpen}>
    <div className="index-heading"><h2>On the shelf</h2><button onClick={()=>setIndexOpen(false)} aria-label="Close reading list">×</button></div>
-   <ol>{books.map((b,i)=><li key={b.id}><button onClick={()=>openBook(b.id)}><span className="index-number">0{i+1}</span><span className="mini-spine" style={{background:b.color}}/><span><strong>{b.title}</strong><small>{b.author}</small></span><Arrow/></button></li>)}</ol>
+   <ol>{books.map((b,i)=><li key={b.id}><button onClick={()=>openBook(b.id)}><span className="index-number">{String(i+1).padStart(2,'0')}</span><span className="mini-spine" style={{background:b.color}}/><span><strong>{b.title}</strong><small>{b.author}</small></span><Arrow/></button></li>)}</ol>
   </section>
   <dialog ref={dialog} className="reading-room" onCancel={event=>{event.preventDefault();closeBook();}} onClose={()=>{if(selected)setSelected(null);}} onKeyDown={readerKeys} aria-labelledby="reading-title">
    {book&&<>
-    <div className="reader-topline"><button className="back-button" onClick={closeBook} autoFocus><span aria-hidden="true">←</span> Back to the shelf</button><span className="small-label">0{ordinal+1} / 0{books.length}</span></div>
+    <div className="reader-topline"><button className="back-button" onClick={closeBook} autoFocus><span aria-hidden="true">←</span> Back to the shelf</button><span className="small-label">{String(ordinal+1).padStart(2,'0')} / {String(books.length).padStart(2,'0')}</span></div>
     <div className="reader-layout">
      <aside className="reader-object" aria-label={`Three-dimensional view of ${book.title}`}><Suspense fallback={<div className="loading-label">Opening the book…</div>}><LibraryScene readerBook={book} reducedMotion={reducedMotion}/></Suspense><span className="object-caption">FROM KAIT’S READING SHELF</span></aside>
      <article className="reader-content">

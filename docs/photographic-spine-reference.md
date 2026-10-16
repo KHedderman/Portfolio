@@ -1,0 +1,47 @@
+# Photographic spine reference — Kait's physical library
+
+The grouped photo supplied October 16, 2026 supersedes the provisional ordering and generic color styling. Focus on all spines first; front covers will follow individually. Preserve wear, creases, rounded edges, material texture, actual graphics, and colors. Match relative height and width from the physical group, accounting for perspective: the right-hand books are closer to the camera. Do not treat image pixel height as physical height.
+
+## Left-to-right order in the first group photograph
+
+1. Converted — Neil Hoyne. Yellow spine, black lettering; short/slim.
+2. The Coming Wave — Mustafa Suleyman. Silver/holographic-looking jacket with strong rainbow reflections, black title and author. The second view confirms these are reflective surface effects rather than a uniformly purple spine.
+3. AI Needs You — Verity Harding. Dark spine, multicolored title.
+4. The Creative Act — Rick Rubin. Pale gray woven cloth texture clearly visible in the second view; black lettering.
+5. How Great Ideas Happen — George Newman. White spine with reflective, iridescent title panels; black lettering.
+6. Empire of AI — Karen Hao. Orange jacket, black lettering, pale lavender edge; existing individual photographs available as prepared assets.
+7. If Anyone Builds It, Everyone Dies — Eliezer Yudkowsky & Nate Soares. Black jacket, white/pink lettering; existing prepared assets.
+8. Coachable — Ric Bucher. White upper spine, black lower section, red/orange lettering and figure.
+9. AI for Good — Josh Tyrangiel. White jacket, black lettering, blue motif; existing prepared assets.
+10. The Singularity Is Nearer — Ray Kurzweil. Black jacket, white lettering, gold publisher emblem; strong reflected highlight.
+11. The Infinity Machine — Sebastian Mallaby. Orange/red jacket, repeated small pale lettering.
+12. AI for Social Good — Surname appears as DODHIA; confirm full author from closer reference. Dark jacket, gold/copper-looking lettering and patterned lower section.
+13. Co-Intelligence — Ethan Mollick. Detailed dark-green, cream and gold illustrated artwork, white title/author panels. Match the photographed graphic exactly; do not substitute marble or generic veins. This supersedes the application's orange provisional spine.
+14. Supremacy — Parmy Olson. Black and vivid green design; reflective highlight.
+15. Crisis Engineering — Martina Nitz, Matthew Weaver & Mikey Dickerson. White spine, black lettering, exposed page edge at top; confirm author spellings from close-up.
+
+Material descriptions above are visual observations, not verified manufacturing finishes. In particular, distinguish printed gradients from metallic foil using closer photographs before assigning metallic material values.
+
+## Delivery requirements
+
+- Use actual supplied spine artwork; avoid inventing lettering or replacing it with generic typography.
+- Natural photographic wear is intentional. No blanket cleanup or polishing.
+- Use one fixed lighting setup with material-specific roughness; do not apply one glossy finish to every book.
+- Keep bottoms on a common shelf plane, with narrow natural seams and no geometry intersections.
+- Inspect page heads, both cover joins, hover return, and mobile horizontal navigation before publication.
+- Retain existing notes and covers where supplied. Do not fabricate takeaways or front covers for new entries.
+- Artificial Intimacy is currently in the application but is not in this group photograph; retain it until the complete set/order is established.
+
+## Reference status
+
+Both opposing group views are now supplied. The second view clearly shows the left-hand spines, their lettering, woven fabric and reflective finishes. Use both views to distinguish perspective from physical proportions; neither is a flat texture scan. Original source photographs are now available locally from the uploaded ZIP. Existing prepared assets are image-tool derivatives; do not describe them as untouched originals.
+
+Second-view observations: Converted has a yellow jacket with natural edge curvature and black lettering; AI Needs You has a dark jacket and multicolored reflective-looking title. Preserve the folded/creased jackets and uneven paper edges visible across the collection. The opposing views establish the same left-to-right sequence; do not reverse the order when referencing the second photo.
+
+Graphics fidelity check: two generated atlas attempts were inspected and NOT approved for publication. Fine lettering and publisher marks were changed, and Co-Intelligence artwork was not sufficiently faithful. Do not use these as verified photographic textures. Obtain accessible original image files and extract/rectify the actual source pixels rather than regenerate the designs. Existing live artwork was left unchanged.
+
+## Original-source implementation
+
+The uploaded ZIP supplied IMG_7650.jpeg and IMG_7651.jpeg at 5712×4284. All fifteen reference spines now use perspective-rectified crops of these originals, with no image generation or graphic replacement. See spine-sources.json for source hashes, crop coordinates, assets and approximate relative model dimensions. scripts/extract-spines.py reproduces the extracts using Pillow and NumPy. Originals remain outside the published repository to avoid publishing the surrounding room; provide their directory as the script argument.
+
+The extracted pixels retain reflections, surface wear, typography and logos. Perspective correction interpolates pixels; it cannot recover details obscured by glare or hidden around a curved edge. Relative model measurements are visual estimates, not publisher-verified physical dimensions. Individual straight-on source files can refine these later. Existing supplied front covers remain; books without front covers open to their original spine. Artificial Intimacy remains after the fifteen reference books pending its own source photo.
