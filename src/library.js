@@ -1,40 +1,6 @@
 // Photographic spines are rectified original pixels; provenance: docs/spine-sources.json.
 export const books = [
   {
-    "id": "the-coming-wave",
-    "title": "The Coming Wave",
-    "author": "Mustafa Suleyman",
-    "subtitle": "",
-    "color": "#b2b4c4",
-    "ink": "#181a19",
-    "topic": "The future of AI",
-    "height": 3.73,
-    "width": 0.46,
-    "depth": 2.45,
-    "binding": "paper",
-    "roughness": 0.34,
-    "metalness": 0.12,
-    "spineImage": "/images/books/the-coming-wave-individual-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": "/images/books/the-coming-wave-individual-cover.webp",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=The%20Coming%20Wave%20Mustafa%20Suleyman",
-    "affiliate": false,
-    "coverCrop": [
-      0,
-      1
-    ],
-    "photoPresentation": true
-  },
-  {
     "id": "ai-needs-you",
     "title": "AI Needs You",
     "author": "Verity Harding",
@@ -276,41 +242,6 @@ export const books = [
     "photoPresentation": true
   },
   {
-    "id": "the-singularity-is-nearer",
-    "title": "The Singularity Is Nearer",
-    "author": "Ray Kurzweil",
-    "subtitle": "",
-    "color": "#151619",
-    "ink": "#181a19",
-    "topic": "The future of AI",
-    "height": 3.91,
-    "width": 0.64,
-    "depth": 2.56,
-    "binding": "paper",
-    "roughness": 0.39,
-    "metalness": 0,
-    "spineImage": "/images/books/the-singularity-is-nearer-individual-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": "/images/books/the-singularity-is-nearer-individual-cover.webp",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=The%20Singularity%20Is%20Nearer%20Ray%20Kurzweil",
-    "affiliate": false,
-    "spinePerspectiveFit": true,
-    "photoPresentation": true,
-    "coverCrop": [
-      0,
-      1
-    ]
-  },
-  {
     "id": "the-infinity-machine",
     "title": "The Infinity Machine",
     "author": "Sebastian Mallaby",
@@ -344,35 +275,6 @@ export const books = [
       0,
       1
     ]
-  },
-  {
-    "id": "ai-for-social-good",
-    "title": "AI for Social Good",
-    "author": "Rahul Dodhia",
-    "subtitle": "",
-    "color": "#343b3c",
-    "ink": "#181a19",
-    "topic": "AI & society",
-    "height": 3.64,
-    "width": 0.56,
-    "depth": 2.39,
-    "binding": "paper",
-    "roughness": 0.76,
-    "metalness": 0,
-    "spineImage": "/images/books/ai-for-social-good-source-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": null,
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=AI%20for%20Social%20Good%20Rahul%20Dodhia",
-    "affiliate": false
   },
   {
     "id": "co-intelligence",
