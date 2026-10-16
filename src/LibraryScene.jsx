@@ -54,13 +54,29 @@ function Bookend({side}){
  const source=useTexture('/images/agate-bookends.webp');
  const face=useMemo(()=>{const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.repeat.set(side<0?.389:.407,.852);t.offset.set(side<0?.068:.542,.071);t.needsUpdate=true;return t;},[source,side]);
  useEffect(()=>()=>face.dispose(),[face]);
+ // Trace the face's actual stone silhouette instead of a smooth enclosing arc.
+ // This keeps the solid rim registered to the photographed mineral bands.
  const shape=useMemo(()=>{
-  const s=new THREE.Shape();
-  if(side<0){s.moveTo(-.66,0);s.lineTo(.83,0);s.lineTo(.83,2.45);s.bezierCurveTo(.1,2.42,-.57,1.83,-.8,1.03);s.bezierCurveTo(-.98,.58,-.82,.19,-.66,0);}
-  else{s.moveTo(-.83,0);s.lineTo(.66,0);s.bezierCurveTo(.82,.19,.98,.58,.8,1.03);s.bezierCurveTo(.57,1.83,-.1,2.42,-.83,2.45);s.lineTo(-.83,0);}return s;
- },[side]);
+  const canvas=document.createElement('canvas');canvas.width=384;canvas.height=552;
+  const context=canvas.getContext('2d',{willReadFrequently:true});
+  const image=source.image;
+  context.drawImage(image,(side<0?.068:.542)*image.width,(1-.071-.852)*image.height,
+   (side<0?.389:.407)*image.width,.852*image.height,0,0,384,552);
+  const pixels=context.getImageData(0,0,384,552).data;
+  const left=[],right=[];
+  for(let y=0;y<552;y+=2){
+   let first=-1,last=-1;
+   for(let x=0;x<384;x++){if(pixels[(y*384+x)*4+3]>=128){if(first<0)first=x;last=x;}}
+   if(last-first<8)continue;
+   const height=(1-y/551)*2.45;
+   left.push(new THREE.Vector2((first/383-.5)*1.7,height));
+   right.push(new THREE.Vector2((last/383-.5)*1.7,height));
+  }
+  const outline=[...left,...right.reverse()];
+  const s=new THREE.Shape(outline);s.closePath();return s;
+ },[source,side]);
  return <group position={[side*bookendX,0,.34]} name={side<0?'left-agate-bookend':'right-agate-bookend'}>
-  <mesh castShadow receiveShadow><extrudeGeometry args={[shape,{depth:.55,bevelEnabled:true,bevelThickness:.015,bevelSize:.018,bevelSegments:2,steps:1,curveSegments:36}]}/><meshStandardMaterial color="#b8b4a4" roughness={.85}/></mesh>
+  <mesh castShadow receiveShadow position={[0,0,.25]}><extrudeGeometry args={[shape,{depth:.31,bevelEnabled:true,bevelThickness:.003,bevelSize:.002,bevelSegments:2,steps:1}]}/><meshStandardMaterial color="#c3baa7" roughness={.94}/></mesh>
   <mesh position={[0,1.225,.571]}><planeGeometry args={[1.7,2.45]}/><meshStandardMaterial map={face} transparent alphaTest={.32} roughness={.56} metalness={.01} depthWrite /></mesh>
  </group>;
 }
