@@ -16,7 +16,13 @@ function Shelf({onOpen,reducedMotion}){
  const [scroll,setScroll]=useState({overflow:false,left:false,right:false});
  useEffect(()=>{
   const element=viewport.current;
-  const update=()=>{const end=element.scrollWidth-element.clientWidth;setScroll({overflow:end>2,left:element.scrollLeft>2,right:element.scrollLeft<end-2});};
+  const update=()=>{
+   // Scale the shelf with its available height; scroll horizontally rather than shrinking it.
+   const width=Math.max(780,element.clientHeight/4.35*Math.max(7.1,bookendX*2+2.5));
+   stage.current.style.setProperty('--shelf-width',`${width}px`);
+   const end=element.scrollWidth-element.clientWidth;
+   setScroll(previous=>{const next={overflow:end>2,left:element.scrollLeft>2,right:element.scrollLeft<end-2};return Object.keys(next).every(key=>next[key]===previous[key])?previous:next;});
+  };
   const observer=new ResizeObserver(update);observer.observe(element);observer.observe(stage.current);
   element.addEventListener('scroll',update,{passive:true});update();
   return()=>{observer.disconnect();element.removeEventListener('scroll',update);};

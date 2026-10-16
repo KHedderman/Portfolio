@@ -59,3 +59,12 @@ body:has(.reading-room[open]){overflow:hidden}
 .shelf-scroll-controls button{width:44px;height:44px;border-color:#c3c9c4;font-size:22px}
 .shelf-scroll-controls span{font-size:17px}
 @media(max-width:1100px){.shelf-stage{height:440px}.shelf-viewport{margin-top:-62px}}
+
+/* Fill tall viewports with the shelf, not blank space below the caption. */
+.library{display:flex;flex-direction:column;min-height:100dvh}
+.library-topline{flex:none}
+.shelf-section{display:flex;flex-direction:column;flex:1}
+.library-heading,.shelf-scroll-controls,.library-caption-band{flex:none}
+.shelf-viewport{flex:1 0 clamp(440px,58vh,680px);min-height:440px}
+.shelf-stage{position:absolute;top:0;left:0;height:100%;min-height:0}
+@media(max-width:1100px){.shelf-viewport{flex-basis:440px}}
