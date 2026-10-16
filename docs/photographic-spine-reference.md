@@ -112,3 +112,11 @@ User says they are working through it: display “Currently working through” i
 ## AI-first shelf order and no reading-status labels
 
 The user approved this order: AI for Good; If Anyone Builds It, Everyone Dies; Co-Intelligence; Empire of AI; The Infinity Machine; AI Needs You; The Coming Wave; Coachable; The Creative Act; The Artist’s Way; How Great Ideas Happen; Crisis Engineering. This puts AI-related titles first for mobile browsing. The user does not want read/currently-reading/currently-working-through labels: removed the Artist’s Way status and both status display locations. Do not reintroduce reading-status labels without a new request.
+
+## Image-quality pass and Verity Harding removal
+
+AI Needs You is removed at the user's request. Current library: 11 titles. All available active individual-photo cutouts were re-exported from the original uploaded JPEGs at 2400px height / WebP quality 98 (previously 1800px / 95). AI for Good remains on its earlier asset pending a new original photograph. Preserve genuine source detail: do not invent detail or globally smooth/sharpen away wear.
+
+Canvas DPR now supports 2 instead of capping at 1.5. Bookend faces use untone-mapped photographic colors, matching book faces, instead of receiving additional scene lighting that bleached the original photo. The agate WebP is a lossless export of the existing original PNG at its native 1536x1024 size; no artificial upscaling. Full-resolution covers load only when opened, while shelf faces are preloaded.
+
+The Infinity Machine uses `the-infinity-machine-cover-no-sticker.webp`. The round $5-off sticker was removed with a localized repair generated from the existing cover; only the sticker region was blended into the higher-resolution original, preserving the original alpha and all visible pixels outside that region. The blurred multiple-exposure portrait is printed cover artwork and intentionally remains. The unretouched `*-individual-cover.webp` remains available as source. Never overwrite the retouched cover during automatic re-extraction. Sticker repair source: generated_images/exec-a3f42102-dbdd-4fdf-9f93-9e89bf64710b.png in the workspace.

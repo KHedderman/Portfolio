@@ -159,7 +159,7 @@ export const books = [
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": "/images/books/the-infinity-machine-individual-cover.webp",
+    "coverImage": "/images/books/the-infinity-machine-cover-no-sticker.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
@@ -172,40 +172,6 @@ export const books = [
       0,
       1
     ]
-  },
-  {
-    "id": "ai-needs-you",
-    "title": "AI Needs You",
-    "author": "Verity Harding",
-    "subtitle": "",
-    "color": "#242329",
-    "ink": "#181a19",
-    "topic": "AI & society",
-    "height": 3.88,
-    "width": 0.48,
-    "depth": 2.5,
-    "binding": "paper",
-    "roughness": 0.66,
-    "metalness": 0,
-    "spineImage": "/images/books/ai-needs-you-individual-spine.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "coverImage": "/images/books/ai-needs-you-individual-cover.webp",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=AI%20Needs%20You%20Verity%20Harding",
-    "affiliate": false,
-    "coverCrop": [
-      0,
-      1
-    ],
-    "photoPresentation": true
   },
   {
     "id": "the-coming-wave",

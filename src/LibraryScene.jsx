@@ -236,7 +236,7 @@ function ConstructedBook({book,onOpen,reader=false,reducedMotion=false}){
 }
 function Bookend({side}){
  const source=useTexture('/images/agate-bookends.webp');
- const face=useMemo(()=>{const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.repeat.set(side<0?.389:.407,.852);t.offset.set(side<0?.068:.542,.071);t.needsUpdate=true;return t;},[source,side]);
+ const face=useMemo(()=>{const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;t.repeat.set(side<0?.389:.407,.852);t.offset.set(side<0?.068:.542,.071);t.needsUpdate=true;return t;},[source,side]);
  useEffect(()=>()=>face.dispose(),[face]);
  // Trace the face's actual stone silhouette instead of a smooth enclosing arc.
  // This keeps the solid rim registered to the photographed mineral bands.
@@ -261,7 +261,7 @@ function Bookend({side}){
  },[source,side]);
  return <group position={[side*bookendX,0,.34]} name={side<0?'left-agate-bookend':'right-agate-bookend'}>
   <mesh castShadow receiveShadow position={[0,0,.25]}><extrudeGeometry args={[shape,{depth:.31,bevelEnabled:true,bevelThickness:.003,bevelSize:.002,bevelSegments:2,steps:1}]}/><meshStandardMaterial color="#c3baa7" roughness={.94}/></mesh>
-  <mesh position={[0,1.225,.571]}><planeGeometry args={[1.7,2.45]}/><meshStandardMaterial map={face} transparent alphaTest={.32} roughness={.56} metalness={.01} depthWrite /></mesh>
+  <mesh position={[0,1.225,.571]}><planeGeometry args={[1.7,2.45]}/><meshBasicMaterial map={face} transparent alphaTest={.32} toneMapped={false} depthWrite /></mesh>
  </group>;
 }
 function Lighting(){return <>
@@ -272,7 +272,8 @@ function Lighting(){return <>
   <Lightformer form="rect" intensity={1} color="#eaf2f1" position={[5,3,2]} rotation={[0,-Math.PI/3,0]} scale={[3,4,1]}/>
  </Environment>
  </>;}
-books.forEach(book=>{const urls=[book.spineImage,book.coverImage].filter(Boolean);if(urls.length)useTexture.preload(urls);});
+// Load shelf faces first; full-resolution covers load when their reader opens.
+books.forEach(book=>{if(book.spineImage)useTexture.preload(book.spineImage);});
 useTexture.preload('/images/agate-bookends.webp');
 function World({onOpen,reducedMotion,readerBook}){
  return <>
@@ -291,7 +292,7 @@ function World({onOpen,reducedMotion,readerBook}){
  </>;}
 class RenderBoundary extends React.Component{constructor(p){super(p);this.state={failed:false};}static getDerivedStateFromError(){return {failed:true};}render(){return this.state.failed?<div className="scene-unavailable">The 3D shelf couldn’t load. You can still open every book from the reading list below.</div>:this.props.children;}}
 export default function LibraryScene({onOpen,reducedMotion=false,readerBook=null}){
- return <RenderBoundary><Canvas orthographic shadows frameloop="demand" dpr={[1,1.5]} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} camera={{near:.1,far:250}} fallback={<div className="scene-unavailable">Explore the books through the reading list below.</div>} onCreated={({gl})=>{gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=1.05;}}>
+ return <RenderBoundary><Canvas orthographic shadows frameloop="demand" dpr={[1,2]} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} camera={{near:.1,far:250}} fallback={<div className="scene-unavailable">Explore the books through the reading list below.</div>} onCreated={({gl})=>{gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=1.05;}}>
   <Suspense fallback={null}><World onOpen={onOpen} reducedMotion={reducedMotion} readerBook={readerBook}/></Suspense>
  </Canvas></RenderBoundary>;
 }
