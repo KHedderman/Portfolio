@@ -6,6 +6,16 @@ import {TessellateModifier} from 'three/addons/modifiers/TessellateModifier.js';
 import {books,bookendX,shelfFramingHeight} from './library.js';
 import {bookTextures,disposeTextures} from './materials.js';
 
+// These front-facing photographs need crisp type and fabric detail. Keep
+// mipmaps for downsampling, without blending two differently softened levels.
+function configurePhotoTexture(texture){
+ texture.colorSpace=THREE.SRGBColorSpace;
+ texture.minFilter=THREE.LinearMipmapNearestFilter;
+ texture.magFilter=THREE.LinearFilter;
+ texture.anisotropy=1;
+ return texture;
+}
+
 function Camera({reader=false,readerHeight=0}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
@@ -29,7 +39,7 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
  const kind=reader&&book.coverImage?'cover':'spine';
  const source=useTexture(book[kind+'Image']);
  const texture=useMemo(()=>{
-  const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;
+  const t=configurePhotoTexture(source.clone());
   const [x=0,w=1,y=0,h=1]=book[kind+'Crop']??[];
   t.offset.set(x,y);t.repeat.set(w,h);t.needsUpdate=true;return t;
  },[source,book,kind]);
@@ -236,7 +246,7 @@ function ConstructedBook({book,onOpen,reader=false,reducedMotion=false}){
 }
 function Bookend({side}){
  const source=useTexture('/images/agate-bookends.webp');
- const face=useMemo(()=>{const t=source.clone();t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;t.repeat.set(side<0?.389:.407,.852);t.offset.set(side<0?.068:.542,.071);t.needsUpdate=true;return t;},[source,side]);
+ const face=useMemo(()=>{const t=configurePhotoTexture(source.clone());t.repeat.set(side<0?.389:.407,.852);t.offset.set(side<0?.068:.542,.071);t.needsUpdate=true;return t;},[source,side]);
  useEffect(()=>()=>face.dispose(),[face]);
  // Trace the face's actual stone silhouette instead of a smooth enclosing arc.
  // This keeps the solid rim registered to the photographed mineral bands.
@@ -292,7 +302,7 @@ function World({onOpen,reducedMotion,readerBook}){
  </>;}
 class RenderBoundary extends React.Component{constructor(p){super(p);this.state={failed:false};}static getDerivedStateFromError(){return {failed:true};}render(){return this.state.failed?<div className="scene-unavailable">The 3D shelf couldn’t load. You can still open every book from the reading list below.</div>:this.props.children;}}
 export default function LibraryScene({onOpen,reducedMotion=false,readerBook=null}){
- return <RenderBoundary><Canvas orthographic shadows frameloop="demand" dpr={[1,2]} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} camera={{near:.1,far:250}} fallback={<div className="scene-unavailable">Explore the books through the reading list below.</div>} onCreated={({gl})=>{gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=1.05;}}>
+ return <RenderBoundary><Canvas orthographic shadows frameloop="demand" dpr={[1,3]} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} camera={{near:.1,far:250}} fallback={<div className="scene-unavailable">Explore the books through the reading list below.</div>} onCreated={({gl})=>{gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=1.05;}}>
   <Suspense fallback={null}><World onOpen={onOpen} reducedMotion={reducedMotion} readerBook={readerBook}/></Suspense>
  </Canvas></RenderBoundary>;
 }
