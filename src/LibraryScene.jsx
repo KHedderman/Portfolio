@@ -9,7 +9,7 @@ import {bookTextures,disposeTextures} from './materials.js';
 function Camera({reader=false}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
-  camera.position.set(reader?3.9:.5,reader?2.6:2.7,reader?9:12);
+  camera.position.set(reader?3.9:0,reader?2.6:2.7,reader?9:12);
   camera.lookAt(0,reader?1.8:Math.max(1.9,...books.map(book=>book.height/2)),0);
   camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/shelfFramingHeight);
   camera.updateProjectionMatrix();invalidate();
@@ -34,8 +34,8 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  useEffect(()=>()=>{gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;},[gl]);
  useFrame((_,delta)=>{
   if(!ref.current)return;
-  const targetZ=reader ? 0 : (hovered ? .2 : 0);
-  const targetY=reader?-1.15:(book.shelfYaw??(hovered?-.035:0));
+  const targetZ=reader?0:1.3-book.depth/2+(hovered?.2:0);
+  const targetY=reader?-1.15:(hovered?-.035:0);
   if(reducedMotion){ref.current.position.z=targetZ;ref.current.rotation.y=targetY;return;}
   const a=1-Math.exp(-delta*11);
   ref.current.position.z=THREE.MathUtils.lerp(ref.current.position.z,targetZ,a);
@@ -138,7 +138,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[photographedJacket,d,h]);
  useEffect(()=>()=>{fittedCover?.board.dispose();fittedCover?.face.dispose();},[fittedCover]);
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
- return <group ref={ref} position={[reader?0:book.x-Math.sin(book.shelfYaw??0)*book.depth/2,0,0]} name={`book-${book.id}`}
+ return <group ref={ref} position={[reader?0:book.x,0,reader?0:1.3-book.depth/2]} name={`book-${book.id}`}
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
