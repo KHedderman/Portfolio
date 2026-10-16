@@ -1,6 +1,7 @@
 import React,{Suspense,lazy,useEffect,useRef,useState} from 'react';
 import {books,bookendX} from './library.js';
 import './style.css';
+import Cursor from './Cursor.jsx';
 const LibraryScene=lazy(()=>import('./LibraryScene.jsx'));
 const Arrow=()=> <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" fill="none" stroke="currentColor" strokeWidth="1.2"/></svg>;
 function useReducedMotion(){const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);useEffect(()=>{const query=matchMedia('(prefers-reduced-motion: reduce)');const change=()=>setReduced(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change);},[]);return reduced;}
@@ -49,6 +50,7 @@ export default function App(){
  },[selected]);
  function readerKeys(event){if(event.altKey||event.ctrlKey||event.metaKey)return;if(event.key==='ArrowRight'){event.preventDefault();step(1);}if(event.key==='ArrowLeft'){event.preventDefault();step(-1);}}
  return <main className={`library ${book?'is-reading':''}`}>
+  <Cursor dialogRef={dialog} readerOpen={Boolean(book)}/>
   <div className="library-topline"><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The full reading list <Arrow/></button></div>
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <header className="library-heading"><h1 aria-label="Kait’s Library"><span className="title-owner">KAIT’S</span><span className="title-library">LIBRARY</span></h1></header>

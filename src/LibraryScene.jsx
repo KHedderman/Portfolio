@@ -25,7 +25,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const coverMap=book.coverImage?editionTextures[editionKeys.indexOf('cover')]:maps.cover;
  useEffect(()=>()=>disposeTextures(maps),[maps]);
  useEffect(()=>{invalidate();},[hovered,reader,invalidate]);
- useEffect(()=>()=>{gl.domElement.style.cursor='default';},[gl]);
+ useEffect(()=>()=>{gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;},[gl]);
  useFrame((_,delta)=>{
   if(!ref.current)return;
   const targetZ=reader ? 0 : (hovered ? .2 : 0);
@@ -39,8 +39,8 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const w=book.width,h=book.height,d=book.depth;
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
  return <group ref={ref} position={[reader?0:book.x,0,0]} name={`book-${book.id}`}
-  onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';}}
-  onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';}}
+  onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
+  onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
    <mesh castShadow receiveShadow position={[0,h/2,-.025]}><boxGeometry args={[w-.07,h-.09,d-.09]}/><meshStandardMaterial map={maps.paper} roughness={.92}/></mesh>
    {[-1,1].map(side=><RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,0]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}

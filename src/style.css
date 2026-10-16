@@ -68,3 +68,15 @@ body:has(.reading-room[open]){overflow:hidden}
 .shelf-viewport{flex:1 0 clamp(440px,58vh,680px);min-height:440px}
 .shelf-stage{position:absolute;top:0;left:0;height:100%;min-height:0}
 @media(max-width:1100px){.shelf-viewport{flex-basis:440px}}
+
+/* A direct, fine-pointer cursor; native cursors remain the fallback. */
+.custom-cursor{position:fixed;top:0;left:0;width:0;height:0;pointer-events:none;z-index:2147483647;color:#252525}
+.custom-cursor[hidden]{display:none}
+.cursor-ring,.cursor-dot{position:absolute;top:0;left:0;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none}
+.cursor-dot{width:4px;height:4px;background:currentColor}
+.cursor-ring{width:22px;height:22px;border:1px solid currentColor;opacity:.65;transition:width .15s ease,height .15s ease}
+.custom-cursor.is-interactive .cursor-ring{width:32px;height:32px}
+.custom-cursor.is-inverted{color:#fff}
+@media(hover:hover) and (pointer:fine){html.custom-cursor-active,html.custom-cursor-active *{cursor:none!important}}
+@media(prefers-reduced-motion:reduce){.cursor-ring{transition:none}}
+@media(forced-colors:active){.custom-cursor{display:none}}
