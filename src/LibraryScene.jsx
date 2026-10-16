@@ -9,8 +9,8 @@ function Camera({reader=false}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
   camera.position.set(reader?3.9:.5,reader?2.6:2.7,reader?9:12);
-  camera.lookAt(0,reader?1.8:1.72,0);
-  camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/7.5,size.height/4.8);
+  camera.lookAt(0,reader?1.8:1.9,0);
+  camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/7.1,size.height/4.35);
   camera.updateProjectionMatrix();invalidate();
  },[camera,size.width,size.height,reader,invalidate]);
  return null;
