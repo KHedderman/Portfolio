@@ -98,3 +98,5 @@ The user requested removal of Converted and Supremacy. Both entries are removed 
 The user approved removing The Coming Wave, The Singularity Is Nearer, and AI for Social Good from the active shelf and reading list. AI for Good and Coachable remain. There are now 11 active entries. Photographic assets and extraction instructions are preserved for possible restoration; these are editorial removals, not a determination that the books' contents are invalid. Artificial Intimacy remains pending exact-title/author verification and a separate removal decision.
 
 The user subsequently requested restoring The Coming Wave. Its complete individual-photo entry is restored in its original position at the left of the shelf. The library now has 12 active books; other removals remain in effect.
+
+The user requested swapping The Coming Wave with If Anyone Builds It, Everyone Dies. The latter is now the leftmost book; The Coming Wave is between Empire of AI and Coachable. AI Needs You remains; no removal was requested in this change. Photographs and dimensions are unchanged.
