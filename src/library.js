@@ -145,7 +145,7 @@ export const books = [
     "ink": "#181a19",
     "topic": "Creativity",
     "height": 4.02,
-    "width": 0.43,
+    "width": 0.49,
     "depth": 2.6,
     "binding": "paper",
     "roughness": 0.58,
@@ -168,7 +168,8 @@ export const books = [
       0,
       1
     ],
-    "photoPresentation": true
+    "photoPresentation": true,
+    "spinePerspectiveFit": true
   },
   {
     "id": "empire-of-ai",
@@ -192,7 +193,7 @@ export const books = [
     "color": "#ed8456",
     "ink": "#181a19",
     "height": 4.08,
-    "width": 0.78,
+    "width": 0.7,
     "depth": 2.68,
     "binding": "paper",
     "topic": "AI & power",
@@ -205,7 +206,8 @@ export const books = [
     "roughness": 0.75,
     "metalness": 0,
     "sourcePhoto": true,
-    "photoPresentation": true
+    "photoPresentation": true,
+    "spinePerspectiveFit": true
   },
   {
     "id": "if-anyone-builds-it",

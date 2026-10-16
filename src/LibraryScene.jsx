@@ -60,13 +60,27 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   const slope=middle.reduce((s,r)=>s+(r.v-meanV)*(r.c-meanC),0)/middle.reduce((s,r)=>s+(r.v-meanV)**2,0);
   const widths=middle.map(r=>r.w).sort((a,b)=>a-b);
   const bodyWidth=widths[Math.floor(widths.length/2)];
+  // Correct perspective taper in selected references using broad body samples.
+  // Hold the fit outside the body so the real rounded head and foot survive.
+  const stations=[.15,.35,.55,.75,.85].map(t=>{
+   const v=bottom+(top-bottom)*t;
+   const band=rows.filter(r=>Math.abs(r.v-v)<(top-bottom)*.035);
+   return {v,c:band.reduce((s,r)=>s+r.c,0)/band.length,w:band.reduce((s,r)=>s+r.w,0)/band.length};
+  });
+  const fitAt=v=>{
+   const a=stations.findLast(s=>s.v<=v)??stations[0];
+   const b=stations.find(s=>s.v>=v)??stations.at(-1);
+   const t=a===b?0:(v-a.v)/(b.v-a.v);
+   return {c:THREE.MathUtils.lerp(a.c,b.c,t),w:THREE.MathUtils.lerp(a.w,b.w,t)};
+  };
   const geometry=new THREE.PlaneGeometry(1,1,1,64),p=geometry.attributes.position,uv=geometry.attributes.uv;
   for(let i=0;i<p.count;i++){
    const u=uv.getX(i),v=uv.getY(i),center=meanC+slope*(v-meanV);
-   p.setXYZ(i,(u-center)*book.width/bodyWidth,((v-bottom)/(top-bottom)-.5)*book.height,0);
+   const fit=book.spinePerspectiveFit?fitAt(v):{c:center,w:bodyWidth};
+   p.setXYZ(i,(u-fit.c)*book.width/fit.w,((v-bottom)/(top-bottom)-.5)*book.height,0);
   }
   geometry.computeVertexNormals();return geometry;
- },[source,texture,kind,width,book.height,book.width]);
+ },[source,texture,kind,width,book.height,book.width,book.spinePerspectiveFit]);
  useEffect(()=>()=>face.dispose(),[face]);
  useFrame((_,delta)=>{
   if(!ref.current)return;

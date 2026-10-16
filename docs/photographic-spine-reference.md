@@ -66,3 +66,9 @@ ZIP 5: How Great Ideas Happen cover IMG_7677, complete spine IMG_7678, detail re
 ## Shelf alignment refinement
 
 All available photographic spines now share a straight-on shelf view. The renderer measures the cropped photo's alpha silhouette, uses the central 70% of rows to estimate the binding centerline and median width, removes only linear lean, and anchors the visible bottom to the shelf. This retains irregular jacket edges and original pixels rather than squaring or repainting them. Explicit layout spacing is zero. Narrow recessed contact shadows behind the joins prevent tiny irregular edge differences from reading as white gaps. Hover lifts a book slightly; resting books remain upright. Books without source photos retain the existing placeholder. Front-cover photographs are unaffected by spine fitting.
+
+## ZIP 7: targeted spine perspective and proportion corrections
+
+ZIP 7 repeats the How Great Ideas Happen complete spine and detail images plus the two partial Empire of AI spine details from ZIP 5. How Great Ideas Happen was too narrow at .43 world units; adjusted to .49. Empire was too wide at .78; adjusted to .70, still wider than the neighboring books. These are visual estimates from the references, not verified publisher measurements. Heights remain 4.02 and 4.08 respectively.
+
+Only these two spines enable `spinePerspectiveFit`: five broad alpha-edge samples across the central body correct taper and lateral curvature left in the photographed viewpoint. The sampled fit is held beyond the central body so the real head/foot curves and creases are retained. This modifies projection geometry, not image graphics or surface texture. Empire still uses its existing complete image because the supplied detail shots omit part of the title. Covers are untouched.
