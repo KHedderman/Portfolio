@@ -41,3 +41,5 @@ body:has(.reading-room[open]){overflow:hidden}
 .get-book-top:hover,.purchase-link:hover{color:#854052}
 .purchase-section>p{font:16px/1.4 Cormorant,Georgia,serif;color:#626262;max-width:440px}
 @media(max-width:600px){.library-heading h1 .title-library{font-size:16vw}.shelf-viewport{margin-top:-62px}.reading-section-heading{gap:16px;margin:30px 0 20px}.reading-section-heading h3{font-size:22px}.get-book-top{font-size:20px;gap:8px}}
+
+.library-intro{color:#6B6B6B}
