@@ -9,6 +9,7 @@ parser.add_argument("--zip4",type=Path,required=True)
 parser.add_argument("--zip5",type=Path)
 parser.add_argument("--zip8",type=Path)
 parser.add_argument("--zip9",type=Path)
+parser.add_argument("--zip11",type=Path)
 parser.add_argument("--only",nargs="*")
 args=parser.parse_args()
 out=Path(__file__).resolve().parents[1]/'public/images/books'
@@ -41,12 +42,18 @@ specs += [
 ('supremacy','cover','IMG_7693',[(91,57),(754,55),(765,1092),(77,1086)],[(92,72),(99,63),(111,59),(155,61),(388,56),(742,56),(751,60),(755,71),(765,1077),(759,1087),(736,1091),(181,1088),(84,1083),(78,1077)]),
 ('co-intelligence','spine','IMG_7698',[(365,32),(473,32),(476,1080),(368,1080)],[(367,77),(374,45),(385,40),(399,34),(414,33),(426,37),(442,36),(456,43),(467,54),(471,76),(473,361),(471,517),(475,727),(474,1003),(468,1063),(462,1073),(445,1079),(404,1078),(379,1071),(372,1062),(368,1007),(367,735),(364,490),(365,196)]),
 ('co-intelligence','cover','IMG_7697',[(106,105),(736,95),(768,1083),(105,1083)],[(108,131),(114,116),(134,109),(267,105),(295,108),(322,103),(485,99),(727,96),(734,98),(767,1063),(766,1077),(752,1082),(128,1083),(109,1077),(106,1068)])]
+specs += [
+('the-infinity-machine','spine','IMG_7707',[(350,25),(513,25),(517,1128),(346,1128)],[(353,47),(360,36),(378,29),(405,26),(449,26),(483,30),(503,37),(510,44),(512,342),(515,738),(516,1098),(512,1114),(498,1120),(476,1125),(421,1127),(382,1125),(361,1119),(350,1112),(347,1101),(347,689),(350,295)]),
+('the-infinity-machine','cover','IMG_7706',[(84,70),(784,41),(831,1136),(96,1140)],[(85,83),(92,73),(143,68),(773,42),(782,46),(787,62),(830,1126),(825,1133),(787,1137),(509,1143),(188,1141),(103,1134),(97,1128)]),
+('the-singularity-is-nearer','spine','IMG_7711',[(390,62),(536,68),(518,1117),(352,1111)],[(393,91),(400,76),(412,67),(423,62),(437,68),(455,70),(481,70),(494,74),(516,74),(526,79),(531,74),(535,88),(530,325),(524,685),(517,1087),(510,1101),(504,1113),(473,1116),(398,1111),(369,1105),(359,1096),(353,1080),(364,781),(380,380)]),
+('the-singularity-is-nearer','cover','IMG_7710',[(83,71),(759,57),(804,1131),(74,1135)],[(84,84),(90,74),(172,68),(439,59),(738,58),(752,61),(759,70),(803,1114),(798,1130),(364,1136),(79,1133),(75,1125)])]
 for id,kind,name,quad,poly in specs:
+ if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] and not args.zip11: continue
  if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] and not args.zip9: continue
  if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] and not args.zip8: continue
  if name in ['IMG_7673','IMG_7677','IMG_7678'] and not args.zip5: continue
  if args.only and id not in args.only: continue
- im=ImageOps.exif_transpose(Image.open((args.zip9 if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] else args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
+ im=ImageOps.exif_transpose(Image.open((args.zip11 if name in ['IMG_7706','IMG_7707','IMG_7710','IMG_7711'] else args.zip9 if name in ['IMG_7693','IMG_7694','IMG_7697','IMG_7698'] else args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
  mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(round(x*scale),round(y*scale)) for x,y in poly],fill=255);im.putalpha(mask)
  h=1800;w=round(h*((np.linalg.norm(np.array(quad[0])-quad[1])+np.linalg.norm(np.array(quad[2])-quad[3]))/2)/((np.linalg.norm(np.array(quad[0])-quad[3])+np.linalg.norm(np.array(quad[1])-quad[2]))/2))
  dst=[(0,0),(w,0),(w,h),(0,h)];A=[];B=[]

@@ -323,20 +323,26 @@ export const books = [
     "binding": "paper",
     "roughness": 0.39,
     "metalness": 0,
-    "spineImage": "/images/books/the-singularity-is-nearer-source-spine.webp",
+    "spineImage": "/images/books/the-singularity-is-nearer-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/the-singularity-is-nearer-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=The%20Singularity%20Is%20Nearer%20Ray%20Kurzweil",
-    "affiliate": false
+    "affiliate": false,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "the-infinity-machine",
@@ -347,25 +353,31 @@ export const books = [
     "ink": "#181a19",
     "topic": "AI & discovery",
     "height": 3.99,
-    "width": 0.72,
+    "width": 0.82,
     "depth": 2.62,
     "binding": "paper",
     "roughness": 0.69,
     "metalness": 0,
-    "spineImage": "/images/books/the-infinity-machine-source-spine.webp",
+    "spineImage": "/images/books/the-infinity-machine-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/the-infinity-machine-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=The%20Infinity%20Machine%20Sebastian%20Mallaby",
-    "affiliate": false
+    "affiliate": false,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "ai-for-social-good",

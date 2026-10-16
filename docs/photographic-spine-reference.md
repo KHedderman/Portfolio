@@ -82,3 +82,9 @@ Coachable: full spine IMG_7686, cover IMG_7685; IMG_7687/7688 are detail referen
 ## ZIP 9 — Supremacy and Co-Intelligence
 
 Supremacy uses IMG_7694 for the full spine and IMG_7693 for the cover, checked against IMG_7695/7696 details. Preserve its original neon-green artwork and photographed gloss. Co-Intelligence uses the more frontal full-spine view IMG_7698 and cover IMG_7697; IMG_7699 is an alternate spine angle and IMG_7700/7701 are detail references. Retain its actual botanical/painted artwork, cream areas, publisher mark and worn jacket edges; do not synthesize a marble pattern. Both receive transparent photographic cutouts, spine perspective correction, and front-cover views. Hands/backgrounds are masked out. Existing heights, widths and order are unchanged. Reproduce with `--zip9 <extracted-folder> --only supremacy co-intelligence`.
+
+## ZIP 11 — The Infinity Machine and The Singularity Is Nearer
+
+The Infinity Machine uses IMG_7707 for its full spine, IMG_7706 for its front cover, and IMG_7708/7709 as detail references. Its width is .82, matching Empire of AI exactly as the user requested; its existing height remains unchanged. Preserve orange shading, repeated lettering, natural edges and the cover's photographed finish.
+
+The Singularity Is Nearer uses IMG_7711 for the complete spine and IMG_7710 for the cover. Preserve the crumpled jacket head, glossy highlights, original graphics and publisher mark. Both use original-pixel transparent cutouts and the established upright spine fit. No additional top/page construction. Reproduce with `--zip11 <extracted-folder> --only the-infinity-machine the-singularity-is-nearer`.
