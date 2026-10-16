@@ -63,3 +63,12 @@ AI for Good spine correction: exclude the photographed side sliver and curved en
 Dimension provenance: AI for Good and If Anyone Builds It heights are matched from Kait’s explicit physical comparison; AI for Good is slightly thicker. These are relative dimensions, not independently verified publisher measurements. Attempts to research Simon & Schuster, Penguin Random House, Hachette and Open Library were blocked by HTTP 403 at the environment proxy. Co-Intelligence and Artificial Intimacy dimensions remain provisional; do not describe them as researched or edition-accurate.
 
 Latest AI for Good correction supersedes the rectangular UV fit: use the newer user photo with its blue patterned left jacket strip. The spine texture retains transparency around its rounded ends; the front surface and solid backing are traced from that alpha silhouette. Adjacent cover boards are recessed to avoid a rectangular frame around the photograph. Never replace the blue strip with beige shading.
+
+
+## Standing photographic treatment
+
+Preserve each supplied book’s creases, worn corners, uneven jacket edges, natural shading, original graphics and colors. Kait wants the mixed character of new and read books. An earlier request to remove dirty marks applied only to that particular front cover; do not apply cleanup globally.
+
+Before publishing a new photographic book, inspect the spine-to-front and spine-to-back joins at high magnification, plus the opened-cover and mobile views. The photograph must meet the supporting geometry without gaps or a rectangular frame. Preserve artwork proportions when shaping the binding. Use the accepted photographic binding as a starting point, not repeated independent patches.
+
+Empire of AI: Kait supplied both photos and described this copy as slightly taller and wider than AI for Good and If Anyone Builds It. Use relative proportions, not claimed publisher measurements. Preserve its orange/lavender jacket and visible creases. Keep orange spines separated when possible, never more than two similar colors adjacent.

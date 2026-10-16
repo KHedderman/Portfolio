@@ -3,15 +3,15 @@ import {Canvas,useFrame,useThree} from '@react-three/fiber';
 import {Environment,Lightformer,ContactShadows,useTexture,RoundedBox} from '@react-three/drei';
 import * as THREE from 'three';
 import {TessellateModifier} from 'three/addons/modifiers/TessellateModifier.js';
-import {books,bookendX} from './library.js';
+import {books,bookendX,shelfFramingHeight} from './library.js';
 import {bookTextures,disposeTextures} from './materials.js';
 
 function Camera({reader=false}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
   camera.position.set(reader?3.9:.5,reader?2.6:2.7,reader?9:12);
-  camera.lookAt(0,reader?1.8:1.9,0);
-  camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/4.35);
+  camera.lookAt(0,reader?1.8:Math.max(1.9,...books.map(book=>book.height/2)),0);
+  camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/shelfFramingHeight);
   camera.updateProjectionMatrix();invalidate();
  },[camera,size.width,size.height,reader,invalidate]);
  return null;
@@ -26,7 +26,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const maps=useMemo(()=>bookTextures(book),[book]);
  const editionKeys=useMemo(()=>['spine','cover'].filter(key=>book[key+'Image']),[book]);
  const editionTextures=useTexture(editionKeys.map(key=>book[key+'Image']));
- useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;if(editionKeys[i]==='spine'&&book.spineCrop){texture.offset.x=book.spineCrop[0];texture.repeat.x=book.spineCrop[1];texture.offset.y=book.spineCrop[2]??0;texture.repeat.y=book.spineCrop[3]??1;}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
+ useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;const crop=book[editionKeys[i]+'Crop'];if(crop){texture.offset.x=crop[0];texture.repeat.x=crop[1];texture.offset.y=crop[2]??0;texture.repeat.y=crop[3]??1;}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
  const spineMap=book.spineImage?editionTextures[editionKeys.indexOf('spine')]:maps.spine;
  const coverMap=book.coverImage?editionTextures[editionKeys.indexOf('cover')]:maps.cover;
  useEffect(()=>()=>disposeTextures(maps),[maps]);

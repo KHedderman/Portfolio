@@ -1,5 +1,5 @@
 import React,{Suspense,lazy,useEffect,useRef,useState} from 'react';
-import {books,bookendX} from './library.js';
+import {books,bookendX,shelfFramingHeight} from './library.js';
 import './style.css';
 import Cursor from './Cursor.jsx';
 const LibraryScene=lazy(()=>import('./LibraryScene.jsx'));
@@ -19,7 +19,7 @@ function Shelf({onOpen,reducedMotion}){
   const element=viewport.current;
   const update=()=>{
    // Scale the shelf with its available height; scroll horizontally rather than shrinking it.
-   const width=Math.max(780,element.clientHeight/4.35*Math.max(7.1,bookendX*2+2.5));
+   const width=Math.max(780,element.clientHeight/shelfFramingHeight*Math.max(7.1,bookendX*2+2.5));
    stage.current.style.setProperty('--shelf-width',`${width}px`);
    const end=element.scrollWidth-element.clientWidth;
    setScroll(previous=>{const next={overflow:end>2,left:element.scrollLeft>2,right:element.scrollLeft<end-2};return Object.keys(next).every(key=>next[key]===previous[key])?previous:next;});
