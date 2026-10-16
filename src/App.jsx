@@ -6,10 +6,10 @@ const Arrow=()=> <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="tr
 function useReducedMotion(){const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);useEffect(()=>{const query=matchMedia('(prefers-reduced-motion: reduce)');const change=()=>setReduced(query.matches);query.addEventListener('change',change);return()=>query.removeEventListener('change',change);},[]);return reduced;}
 const fromHash=()=>books.find(book=>book.id===location.hash.slice(1))?.id||null;
 
-function Notes({book,tab}){
- const items=book[tab];
+function Notes({book}){
+ const items=[...book.takeaways,...book.notes];
  if(items.length)return <div className="note-prose">{items.map((note,i)=><p key={i}>{note}</p>)}</div>;
- return <div className="empty-notes"><span className="small-label">A PAGE STILL TAKING SHAPE</span><p>{tab==='notes'?'Reading notes to come.':tab==='takeaways'?'Takeaways to come.':'Questions to come.'}</p></div>;
+ return <div className="empty-notes"><span className="small-label">A PAGE STILL TAKING SHAPE</span><p>Reading takeaways to come.</p></div>;
 }
 function Shelf({onOpen,reducedMotion}){
  const viewport=useRef();const stage=useRef();
@@ -30,7 +30,7 @@ function Shelf({onOpen,reducedMotion}){
  </>;
 }
 export default function App(){
- const [selected,setSelected]=useState(fromHash);const [tab,setTab]=useState('notes');const [indexOpen,setIndexOpen]=useState(false);
+ const [selected,setSelected]=useState(fromHash);const [indexOpen,setIndexOpen]=useState(false);
  const dialog=useRef();const lastFocus=useRef();const reducedMotion=useReducedMotion();
  const book=books.find(b=>b.id===selected);const ordinal=books.findIndex(b=>b.id===selected);
  function openBook(id){lastFocus.current=document.activeElement;setSelected(id);setIndexOpen(false);}
@@ -38,12 +38,12 @@ export default function App(){
  function step(direction){setSelected(books[(ordinal+direction+books.length)%books.length].id);}
  useEffect(()=>{const hash=()=>setSelected(fromHash());window.addEventListener('hashchange',hash);return()=>window.removeEventListener('hashchange',hash);},[]);
  useEffect(()=>{
-  if(book){setTab('notes');if(!dialog.current.open)dialog.current.showModal();dialog.current.querySelector('.back-button')?.focus({preventScroll:true});dialog.current.scrollTop=0;history.replaceState(null,'',`#${book.id}`);}
+  if(book){if(!dialog.current.open)dialog.current.showModal();dialog.current.querySelector('.back-button')?.focus({preventScroll:true});dialog.current.scrollTop=0;history.replaceState(null,'',`#${book.id}`);}
   else{if(dialog.current.open)dialog.current.close();history.replaceState(null,'',location.pathname+location.search);const target=lastFocus.current;if(target&&target.offsetParent!==null)target.focus();else document.querySelector('.index-toggle')?.focus();}
  },[selected]);
  function readerKeys(event){if(event.altKey||event.ctrlKey||event.metaKey)return;if(event.key==='ArrowRight'){event.preventDefault();step(1);}if(event.key==='ArrowLeft'){event.preventDefault();step(-1);}}
  return <main className={`library ${book?'is-reading':''}`}>
-  <div className="library-topline"><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The reading list <Arrow/></button></div>
+  <div className="library-topline"><button className="index-toggle" aria-expanded={indexOpen} aria-controls="reading-index" onClick={()=>setIndexOpen(!indexOpen)}>The full reading list <Arrow/></button></div>
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <header className="library-heading"><h1 aria-label="Kait’s Library"><span className="title-owner">KAIT’S</span><span className="title-library">LIBRARY</span></h1></header>
    <Shelf onOpen={openBook} reducedMotion={reducedMotion}/>
@@ -61,9 +61,9 @@ export default function App(){
      <article className="reader-content">
       <span className="small-label">{book.topic}</span><h2 id="reading-title">{book.title}</h2><p className="book-author">{book.author}</p>
       {book.subtitle&&<p className="book-subtitle">{book.subtitle}</p>}
-      <div className="note-tabs" role="tablist" aria-label="Reading reflections">{[['notes','Reading notes'],['takeaways','Takeaways'],['questions','Questions']].map(([key,label])=><button key={key} role="tab" id={`tab-${key}`} aria-controls="notes-panel" aria-selected={tab===key} tabIndex={tab===key?0:-1} onClick={()=>setTab(key)} onKeyDown={event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.stopPropagation();event.preventDefault();const keys=['notes','takeaways','questions'];const next=keys[(keys.indexOf(key)+(event.key==='ArrowRight'?1:2))%3];setTab(next);document.getElementById(`tab-${next}`)?.focus();}}}>{label}</button>)}</div>
-      <section id="notes-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0}><Notes book={book} tab={tab}/></section>
-      <div className="purchase-section"><a className="purchase-link" href={book.purchaseUrl} target="_blank" rel="noopener noreferrer">Find this book on Bookshop.org <Arrow/></a><p>{book.affiliate?'This is an affiliate link. A purchase may earn a commission.':'Opens a bookstore search in a new tab. No affiliate tracking.'}</p></div>
+      <div className="reading-section-heading"><h3 id="takeaways-heading">Reading takeaways</h3><a className="get-book-top" href={book.purchaseUrl} target="_blank" rel="noopener noreferrer">Get the book <Arrow/></a></div>
+      <section id="notes-panel" aria-labelledby="takeaways-heading"><Notes book={book}/></section>
+      <div className="purchase-section"><a className="purchase-link" href={book.purchaseUrl} target="_blank" rel="noopener noreferrer">Get the book <Arrow/></a><p>Shop through Bookshop.org to support independent bookstores. This link opens a search for the book.</p>{book.affiliate&&<p>This is an affiliate link. I may earn a commission on your purchase.</p>}</div>
       <div className="reader-pagination"><button onClick={()=>step(-1)}><span aria-hidden="true">←</span> Previous book</button><button onClick={()=>step(1)}>Next book <span aria-hidden="true">→</span></button></div>
      </article>
     </div>

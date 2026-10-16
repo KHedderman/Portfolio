@@ -39,3 +39,9 @@ The implementation follows its React 19 / Fiber 9 pairing; `Canvas` owns the ren
 Build and exercise both desktop and mobile. Verify actual spine clicks, keyboard-accessible list selection, notes tabs, previous/next navigation, Escape/back return, fixed camera after dragging, deep links, purchase destinations, reduced motion and horizontal overflow. A successful bundle is not proof of the final visual fidelity. Rendering, exact editions and real personal notes require separate review.
 
 The old desk implementation and preview remain archived outside the checkout in `/workspace/archive/desk-version` and `/workspace/archive/orbiting-prototype`.
+
+## Current presentation
+
+The heading is Kait’s Library: Unbounded lettering in vermilion (#D63D2A), with a neutral off-white background (#fafaf8) and charcoal body text. Mobile retains large books in a horizontally scrollable shelf, with arrows and keyboard navigation. The full reading list provides accessible title buttons.
+
+The reader now has one Reading takeaways section, with “Reading takeaways to come.” until Kait supplies her reflections. Legacy notes are displayed in the same section; there are no separate notes or questions tabs. “Get the book” links appear above and below the content. Both still open Bookshop.org search results, with wording about supporting independent bookstores. Exact edition URLs remain pending.
