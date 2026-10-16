@@ -379,27 +379,6 @@ export const books = [
       0,
       1
     ]
-  },
-  {
-    "id": "artificial-intimacy",
-    "title": "Artificial Intimacy",
-    "subtitle": "",
-    "author": "Sherry Turkle",
-    "color": "#b5aa92",
-    "ink": "#2d3635",
-    "height": 3.47,
-    "width": 0.64,
-    "depth": 1.88,
-    "binding": "paper",
-    "topic": "Technology & connection",
-    "bibliographyConfirmed": false,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=Artificial%20Intimacy%20Sherry%20Turkle",
-    "affiliate": false,
-    "spineImage": null,
-    "coverImage": null
   }
 ];
 const bindingGap=0;

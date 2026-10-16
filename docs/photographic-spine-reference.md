@@ -100,3 +100,5 @@ The user approved removing The Coming Wave, The Singularity Is Nearer, and AI fo
 The user subsequently requested restoring The Coming Wave. Its complete individual-photo entry is restored in its original position at the left of the shelf. The library now has 12 active books; other removals remain in effect.
 
 The user requested swapping The Coming Wave with If Anyone Builds It, Everyone Dies. The latter is now the leftmost book; The Coming Wave is between Empire of AI and Coachable. AI Needs You remains; no removal was requested in this change. Photographs and dimensions are unchanged.
+
+Artificial Intimacy is now removed at the user's request because no reference photos are available. The active library contains 11 books. AI Needs You was also moved immediately before Co-Intelligence in the preceding update. Restore Artificial Intimacy only on request, after verifying its exact title/author and receiving suitable images.
