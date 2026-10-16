@@ -20,7 +20,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const maps=useMemo(()=>bookTextures(book),[book]);
  const editionKeys=useMemo(()=>['spine','cover'].filter(key=>book[key+'Image']),[book]);
  const editionTextures=useTexture(editionKeys.map(key=>book[key+'Image']));
- useMemo(()=>{editionTextures.forEach(texture=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;texture.needsUpdate=true;});},[editionTextures]);
+ useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;if(editionKeys[i]==='spine'&&book.spineCrop){texture.offset.x=book.spineCrop[0];texture.repeat.x=book.spineCrop[1];}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
  const spineMap=book.spineImage?editionTextures[editionKeys.indexOf('spine')]:maps.spine;
  const coverMap=book.coverImage?editionTextures[editionKeys.indexOf('cover')]:maps.cover;
  useEffect(()=>()=>disposeTextures(maps),[maps]);

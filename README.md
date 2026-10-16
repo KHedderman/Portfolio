@@ -45,3 +45,5 @@ The old desk implementation and preview remain archived outside the checkout in 
 The heading is Kait’s Library: Unbounded lettering in claret (#854052), with a neutral off-white background (#fafaf8) and charcoal body text. Mobile retains large books in a horizontally scrollable shelf, with arrows and keyboard navigation. The full reading list provides accessible title buttons.
 
 The reader now has one Reading takeaways section, with “Reading takeaways to come.” until Kait supplies her reflections. Legacy notes are displayed in the same section; there are no separate notes or questions tabs. “Get the book” links appear above and below the content. Both still open Bookshop.org search results, with wording about supporting independent bookstores. Exact edition URLs remain pending.
+
+The If Anyone Builds It spine now uses an image-tool-prepared derivative of Kait’s supplied spine photograph, with narrower proportions. Its front cover is still provisional. The texture uses UV cropping to exclude the surrounding black margins; it is not an untouched scan.
