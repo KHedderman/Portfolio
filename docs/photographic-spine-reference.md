@@ -72,3 +72,9 @@ All available photographic spines now share a straight-on shelf view. The render
 ZIP 7 repeats the How Great Ideas Happen complete spine and detail images plus the two partial Empire of AI spine details from ZIP 5. How Great Ideas Happen was too narrow at .43 world units; adjusted to .49. Empire was too wide at .78; adjusted to .70, still wider than the neighboring books. These are visual estimates from the references, not verified publisher measurements. Heights remain 4.02 and 4.08 respectively.
 
 Only these two spines enable `spinePerspectiveFit`: five broad alpha-edge samples across the central body correct taper and lateral curvature left in the photographed viewpoint. The sampled fit is held beyond the central body so the real head/foot curves and creases are retained. This modifies projection geometry, not image graphics or surface texture. Empire still uses its existing complete image because the supplied detail shots omit part of the title. Covers are untouched.
+
+## ZIP 8 — complete Empire spine and two additional books
+
+IMG_7674 supplies the complete original Empire of AI spine, superseding the generated derivative and the missing-full-spine limitation above. Its transparent cutout retains the thin lavender edge, orange shading and creases. The user explicitly found .70 too narrow; width is now .82 with the existing 4.08 height. Perspective fitting keeps the binding upright.
+
+Coachable: full spine IMG_7686, cover IMG_7685; IMG_7687/7688 are detail references. Crisis Engineering: full spine IMG_7690, cover IMG_7689; IMG_7692 is a detail reference. Spine masks exclude hands, backgrounds and the adjacent front-cover planes. Both use original pixels with the same spine perspective correction. Their existing relative dimensions and shelf positions in the reading order are retained. Reproduce with `--zip8 <extracted-folder> --only empire-of-ai coachable crisis-engineering` (omit --zip5 to retain the already-extracted Empire cover).

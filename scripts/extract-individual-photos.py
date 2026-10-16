@@ -7,6 +7,7 @@ parser.add_argument("--zip2",type=Path,required=True)
 parser.add_argument("--zip3",type=Path,required=True)
 parser.add_argument("--zip4",type=Path,required=True)
 parser.add_argument("--zip5",type=Path)
+parser.add_argument("--zip8",type=Path)
 parser.add_argument("--only",nargs="*")
 args=parser.parse_args()
 out=Path(__file__).resolve().parents[1]/'public/images/books'
@@ -28,10 +29,17 @@ specs += [
 ('how-great-ideas-happen','spine','IMG_7678',[(357,84),(482,84),(490,1078),(369,1078)],[(378,108),(382,96),(390,89),(407,85),(446,85),(465,90),(475,100),(481,119),(481,478),(489,1037),(486,1062),(480,1072),(465,1076),(395,1077),(381,1073),(375,1063),(370,1030),(358,380),(362,272)]),
 ('how-great-ideas-happen','cover','IMG_7677',[(134,157),(715,140),(744,1034),(141,1048)],[(135,168),(144,162),(177,156),(363,145),(555,142),(695,143),(713,147),(743,1027),(737,1033),(690,1038),(406,1047),(157,1048),(145,1043),(141,1033)]),
 ('empire-of-ai','cover','IMG_7673',[(141,144),(729,122),(774,1050),(141,1061)],[(141,158),(146,150),(190,142),(318,135),(460,129),(619,123),(712,125),(727,129),(774,1032),(768,1045),(742,1050),(603,1057),(405,1062),(191,1059),(153,1056),(143,1049)])]
+specs += [
+('empire-of-ai','spine','IMG_7674',[(330,174),(470,174),(509,1049),(356,1049)],[(331,192),(335,186),(354,181),(376,176),(410,175),(446,177),(461,181),(466,190),(472,201),(509,1025),(503,1038),(486,1042),(454,1047),(403,1049),(377,1046),(364,1040),(358,1032)]),
+('coachable','spine','IMG_7686',[(366,77),(470,77),(496,1078),(382,1078)],[(367,89),(372,83),(395,78),(427,78),(450,81),(461,87),(467,103),(477,470),(486,760),(496,1058),(491,1068),(475,1073),(438,1077),(398,1077),(385,1073),(383,1064)]),
+('coachable','cover','IMG_7685',[(104,110),(729,101),(760,1054),(116,1067)],[(105,122),(113,116),(140,112),(352,105),(565,102),(724,103),(728,110),(759,1045),(756,1051),(709,1056),(454,1064),(155,1066),(121,1062),(117,1056)]),
+('crisis-engineering','spine','IMG_7690',[(350,55),(454,59),(455,1067),(350,1067)],[(353,56),(373,58),(423,60),(449,60),(454,65),(455,1046),(451,1062),(446,1066),(355,1065),(351,1061)]),
+('crisis-engineering','cover','IMG_7689',[(108,121),(729,108),(751,1058),(111,1063)],[(109,125),(125,122),(723,109),(728,111),(750,1053),(747,1057),(465,1058),(178,1063),(115,1058),(112,1053)])]
 for id,kind,name,quad,poly in specs:
+ if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] and not args.zip8: continue
  if name in ['IMG_7673','IMG_7677','IMG_7678'] and not args.zip5: continue
  if args.only and id not in args.only: continue
- im=ImageOps.exif_transpose(Image.open((args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
+ im=ImageOps.exif_transpose(Image.open((args.zip8 if name in ['IMG_7674','IMG_7685','IMG_7686','IMG_7689','IMG_7690'] else args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
  mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(round(x*scale),round(y*scale)) for x,y in poly],fill=255);im.putalpha(mask)
  h=1800;w=round(h*((np.linalg.norm(np.array(quad[0])-quad[1])+np.linalg.norm(np.array(quad[2])-quad[3]))/2)/((np.linalg.norm(np.array(quad[0])-quad[3])+np.linalg.norm(np.array(quad[1])-quad[2]))/2))
  dst=[(0,0),(w,0),(w,h),(0,h)];A=[];B=[]

@@ -181,19 +181,17 @@ export const books = [
       0,
       1
     ],
-    "spineImage": "/images/books/empire-of-ai-spine-photo.webp",
+    "spineImage": "/images/books/empire-of-ai-individual-spine.webp",
     "spineCrop": [
-      0.15804,
-      0.12629,
-      0.02673,
-      0.953
+      0,
+      1
     ],
     "spineRelief": 0,
     "spineSilhouette": false,
     "color": "#ed8456",
     "ink": "#181a19",
     "height": 4.08,
-    "width": 0.7,
+    "width": 0.82,
     "depth": 2.68,
     "binding": "paper",
     "topic": "AI & power",
@@ -257,20 +255,26 @@ export const books = [
     "binding": "paper",
     "roughness": 0.77,
     "metalness": 0,
-    "spineImage": "/images/books/coachable-source-spine.webp",
+    "spineImage": "/images/books/coachable-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/coachable-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=Coachable%20Ric%20Bucher",
-    "affiliate": false
+    "affiliate": false,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "ai-for-good",
@@ -464,20 +468,26 @@ export const books = [
     "binding": "paper",
     "roughness": 0.88,
     "metalness": 0,
-    "spineImage": "/images/books/crisis-engineering-source-spine.webp",
+    "spineImage": "/images/books/crisis-engineering-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/crisis-engineering-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=Crisis%20Engineering%20Marina%20Nitze%2C%20Matthew%20Weaver%20%26%20Mikey%20Dickerson",
-    "affiliate": false
+    "affiliate": false,
+    "spinePerspectiveFit": true,
+    "photoPresentation": true,
+    "coverCrop": [
+      0,
+      1
+    ]
   },
   {
     "id": "artificial-intimacy",
