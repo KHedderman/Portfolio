@@ -55,3 +55,5 @@ Correction to finish preference: preserve the photographic surface and lighting.
 The reattached original front-cover reference was used for a new, less-polished image-tool edit (cover-photo.webp), retaining broad photographic lighting and surface variation. The spine remains the first photographic derivative (spine.webp), not spine-clean.webp, with its original material relief.
 
 AI for Good by Josh Tyrangiel is now confirmed from Kait’s supplied cover/spine photos. Its subtitle and white jacket are updated, using image-tool-prepared photographic derivatives. Keep photographic lighting and only minimal spot cleanup. Arrange future additions with color variety, avoiding more than two similarly colored spines together. Current order: white, orange, black, cream.
+
+AI for Good is the same height as If Anyone Builds It (3.87), and slightly thicker (.52 versus .44), per Kait. Its spine now uses a photographic cutout retaining curved jacket edges, uneven lighting and dimensional shading, with subtle model curvature. Do not flatten, vectorize or globally polish any supplied book photo. Photographic treatment is a standing requirement for every cover and spine.

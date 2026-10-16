@@ -20,7 +20,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  const maps=useMemo(()=>bookTextures(book),[book]);
  const editionKeys=useMemo(()=>['spine','cover'].filter(key=>book[key+'Image']),[book]);
  const editionTextures=useTexture(editionKeys.map(key=>book[key+'Image']));
- useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;if(editionKeys[i]==='spine'&&book.spineCrop){texture.offset.x=book.spineCrop[0];texture.repeat.x=book.spineCrop[1];}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
+ useMemo(()=>{editionTextures.forEach((texture,i)=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;if(editionKeys[i]==='spine'&&book.spineCrop){texture.offset.x=book.spineCrop[0];texture.repeat.x=book.spineCrop[1];texture.offset.y=book.spineCrop[2]??0;texture.repeat.y=book.spineCrop[3]??1;}texture.needsUpdate=true;});},[editionTextures,editionKeys,book]);
  const spineMap=book.spineImage?editionTextures[editionKeys.indexOf('spine')]:maps.spine;
  const coverMap=book.coverImage?editionTextures[editionKeys.indexOf('cover')]:maps.cover;
  useEffect(()=>()=>disposeTextures(maps),[maps]);
@@ -47,6 +47,13 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   geometry.computeVertexNormals();return geometry;
  },[book.width,book.depth]);
  useEffect(()=>()=>pageHead.dispose(),[pageHead]);
+ const spineSurface=useMemo(()=>{
+  const geometry=new THREE.PlaneGeometry(book.width-.026,book.height-.025,24,1);
+  const vertices=geometry.attributes.position;
+  for(let i=0;i<vertices.count;i++){const x=vertices.getX(i)/((book.width-.026)/2);vertices.setZ(i,(book.spineRelief??0)*(1-x*x));}
+  geometry.computeVertexNormals();return geometry;
+ },[book.width,book.height,book.spineRelief]);
+ useEffect(()=>()=>spineSurface.dispose(),[spineSurface]);
  const w=book.width,h=book.height,d=book.depth;
  const coverMaterial=<meshStandardMaterial color={book.color} roughness={.78} bumpMap={maps.bump} bumpScale={.004}/>;
  return <group ref={ref} position={[reader?0:book.x,0,0]} name={`book-${book.id}`}
@@ -57,7 +64,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
    {[-1,1].map(side=><RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,0]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
    <mesh position={[w/2+.01,h/2,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[d-.035,h-.02]}/><meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    <RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>
-   <mesh position={[0,h/2,d/2+.013]}><planeGeometry args={[w-.026,h-.025]}/><meshStandardMaterial map={spineMap} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
+   <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent alphaTest={.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,h-.045,-.025]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
 }
