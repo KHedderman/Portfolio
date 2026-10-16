@@ -51,3 +51,5 @@ The If Anyone Builds It spine now uses an image-tool-prepared derivative of Kait
 Kait subsequently supplied the front cover and requested pristine surfaces for all books. If Anyone Builds It now uses image-tool-cleaned cover and spine derivatives without visible scratches, dust or scuffs. Fine material relief is reduced on photographic artwork. Preserve this clean condition when preparing future book textures.
 
 Correction to finish preference: preserve the photographic surface and lighting. Only remove isolated dust/scratches from front-cover photos; do not globally smooth or polish the books. The user preferred the earlier spine, which is restored. The current cleaned front cover still needs replacement from the original photo file for minimal retouching.
+
+The reattached original front-cover reference was used for a new, less-polished image-tool edit (cover-photo.webp), retaining broad photographic lighting and surface variation. The spine remains the first photographic derivative (spine.webp), not spine-clean.webp, with its original material relief.
