@@ -6,6 +6,7 @@ parser=argparse.ArgumentParser(description="Extract original photographic book f
 parser.add_argument("--zip2",type=Path,required=True)
 parser.add_argument("--zip3",type=Path,required=True)
 parser.add_argument("--zip4",type=Path,required=True)
+parser.add_argument("--zip5",type=Path)
 parser.add_argument("--only",nargs="*")
 args=parser.parse_args()
 out=Path(__file__).resolve().parents[1]/'public/images/books'
@@ -23,9 +24,14 @@ specs += [
 ('ai-needs-you','cover','IMG_7657',[(143,132),(747,113),(776,1088),(130,1088)],[(144,150),(152,140),(176,134),(737,114),(746,121),(776,1076),(774,1084),(750,1088),(159,1088),(138,1081),(131,1073)]),
 ('the-coming-wave','spine','IMG_7662',[(357,75),(447,75),(489,1144),(381,1144)],[(359,79),(366,77),(378,78),(391,76),(405,77),(422,75),(438,76),(445,81),(449,225),(459,448),(469,684),(483,1007),(489,1120),(484,1131),(476,1140),(392,1143),(383,1139),(381,1129)]),
 ('the-coming-wave','cover','IMG_7661',[(166,177),(717,140),(783,1074),(167,1059)],[(167,181),(179,175),(712,141),(717,142),(782,1070),(780,1073),(176,1059),(168,1054)])]
+specs += [
+('how-great-ideas-happen','spine','IMG_7678',[(357,84),(482,84),(490,1078),(369,1078)],[(378,108),(382,96),(390,89),(407,85),(446,85),(465,90),(475,100),(481,119),(481,478),(489,1037),(486,1062),(480,1072),(465,1076),(395,1077),(381,1073),(375,1063),(370,1030),(358,380),(362,272)]),
+('how-great-ideas-happen','cover','IMG_7677',[(134,157),(715,140),(744,1034),(141,1048)],[(135,168),(144,162),(177,156),(363,145),(555,142),(695,143),(713,147),(743,1027),(737,1033),(690,1038),(406,1047),(157,1048),(145,1043),(141,1033)]),
+('empire-of-ai','cover','IMG_7673',[(141,144),(729,122),(774,1050),(141,1061)],[(141,158),(146,150),(190,142),(318,135),(460,129),(619,123),(712,125),(727,129),(774,1032),(768,1045),(742,1050),(603,1057),(405,1062),(191,1059),(153,1056),(143,1049)])]
 for id,kind,name,quad,poly in specs:
+ if name in ['IMG_7673','IMG_7677','IMG_7678'] and not args.zip5: continue
  if args.only and id not in args.only: continue
- im=ImageOps.exif_transpose(Image.open((args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
+ im=ImageOps.exif_transpose(Image.open((args.zip5 if name in ['IMG_7673','IMG_7677','IMG_7678'] else args.zip3 if name in ['IMG_7653','IMG_7654'] else args.zip4 if name in ['IMG_7657','IMG_7658','IMG_7661','IMG_7662'] else args.zip2)/(name+'.jpeg'))).convert('RGBA');scale=im.width/900
  mask=Image.new('L',im.size);ImageDraw.Draw(mask).polygon([(round(x*scale),round(y*scale)) for x,y in poly],fill=255);im.putalpha(mask)
  h=1800;w=round(h*((np.linalg.norm(np.array(quad[0])-quad[1])+np.linalg.norm(np.array(quad[2])-quad[3]))/2)/((np.linalg.norm(np.array(quad[0])-quad[3])+np.linalg.norm(np.array(quad[1])-quad[2]))/2))
  dst=[(0,0),(w,0),(w,h),(0,h)];A=[];B=[]

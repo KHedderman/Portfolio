@@ -150,32 +150,35 @@ export const books = [
     "binding": "paper",
     "roughness": 0.58,
     "metalness": 0.03,
-    "spineImage": "/images/books/how-great-ideas-happen-source-spine.webp",
+    "spineImage": "/images/books/how-great-ideas-happen-individual-spine.webp",
     "spineCrop": [
       0,
       1
     ],
     "spineSilhouette": false,
     "sourcePhoto": true,
-    "coverImage": null,
+    "coverImage": "/images/books/how-great-ideas-happen-individual-cover.webp",
     "bibliographyConfirmed": true,
     "notes": [],
     "takeaways": [],
     "questions": [],
     "purchaseUrl": "https://bookshop.org/search?keywords=How%20Great%20Ideas%20Happen%20George%20Newman",
-    "affiliate": false
+    "affiliate": false,
+    "coverCrop": [
+      0,
+      1
+    ],
+    "photoPresentation": true
   },
   {
     "id": "empire-of-ai",
     "title": "Empire of AI",
-    "subtitle": "Dreams and Nightmares in Sam Altman\u2019s OpenAI",
+    "subtitle": "Dreams and Nightmares in Sam Altman’s OpenAI",
     "author": "Karen Hao",
-    "coverImage": "/images/books/empire-of-ai-cover-photo.webp",
+    "coverImage": "/images/books/empire-of-ai-individual-cover.webp",
     "coverCrop": [
-      0.40373,
-      0.45894,
-      0.03226,
-      0.92627
+      0,
+      1
     ],
     "spineImage": "/images/books/empire-of-ai-spine-photo.webp",
     "spineCrop": [
