@@ -9,7 +9,7 @@ import {bookTextures,disposeTextures} from './materials.js';
 function Camera({reader=false}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
-  camera.position.set(reader?3.9:.5,reader?2.6:2.7,reader?9:12);
+  camera.position.set(reader?3.9:0,reader?2.6:Math.max(1.9,...books.map(book=>book.height/2)),reader?9:12);
   camera.lookAt(0,reader?1.8:Math.max(1.9,...books.map(book=>book.height/2)),0);
   camera.zoom=reader?Math.min(size.width/3.6,size.height/4.9):Math.min(size.width/Math.max(7.1,bookendX*2+2.5),size.height/shelfFramingHeight);
   camera.updateProjectionMatrix();invalidate();
@@ -37,23 +37,56 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
  useEffect(()=>{invalidate();},[hovered,invalidate]);
  useEffect(()=>()=>{gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;},[gl]);
  const width=kind==='cover'?book.height*(source.image.width*texture.repeat.x)/(source.image.height*texture.repeat.y):book.width;
+ const face=useMemo(()=>{
+  if(kind==='cover')return new THREE.PlaneGeometry(width,book.height);
+  // Measure the visible binding rather than the transparent image rectangle.
+  // A linear center fit removes camera lean without flattening the jacket edges.
+  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=1024;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(source.image,texture.offset.x*source.image.width,
+   (1-texture.offset.y-texture.repeat.y)*source.image.height,
+   texture.repeat.x*source.image.width,texture.repeat.y*source.image.height,0,0,256,1024);
+  const pixels=ctx.getImageData(0,0,256,1024).data,rows=[];
+  for(let y=0;y<1024;y++){
+   let left=256,right=-1;
+   for(let x=0;x<256;x++)if(pixels[(y*256+x)*4+3]>128){left=Math.min(left,x);right=x;}
+   if(right-left>25)rows.push({v:1-(y+.5)/1024,c:(left+right+1)/512,w:(right-left+1)/256});
+  }
+  if(!rows.length)return new THREE.PlaneGeometry(width,book.height);
+  const top=rows[0].v+.5/1024,bottom=rows.at(-1).v-.5/1024;
+  const middle=rows.filter(r=>r.v>bottom+(top-bottom)*.15&&r.v<bottom+(top-bottom)*.85);
+  const meanV=middle.reduce((s,r)=>s+r.v,0)/middle.length;
+  const meanC=middle.reduce((s,r)=>s+r.c,0)/middle.length;
+  const slope=middle.reduce((s,r)=>s+(r.v-meanV)*(r.c-meanC),0)/middle.reduce((s,r)=>s+(r.v-meanV)**2,0);
+  const widths=middle.map(r=>r.w).sort((a,b)=>a-b);
+  const bodyWidth=widths[Math.floor(widths.length/2)];
+  const geometry=new THREE.PlaneGeometry(1,1,1,64),p=geometry.attributes.position,uv=geometry.attributes.uv;
+  for(let i=0;i<p.count;i++){
+   const u=uv.getX(i),v=uv.getY(i),center=meanC+slope*(v-meanV);
+   p.setXYZ(i,(u-center)*book.width/bodyWidth,((v-bottom)/(top-bottom)-.5)*book.height,0);
+  }
+  geometry.computeVertexNormals();return geometry;
+ },[source,texture,kind,width,book.height,book.width]);
+ useEffect(()=>()=>face.dispose(),[face]);
  useFrame((_,delta)=>{
   if(!ref.current)return;
   ref.current.quaternion.copy(camera.quaternion);
   const target=reader?0:1.313+(hovered?.2:0);
+  const targetY=book.height/2+(!reader&&hovered?.035:0);
   ref.current.position.z=reducedMotion?target:THREE.MathUtils.lerp(ref.current.position.z,target,1-Math.exp(-delta*11));
-  if(Math.abs(ref.current.position.z-target)>.0005)invalidate();
+  ref.current.position.y=reducedMotion?targetY:THREE.MathUtils.lerp(ref.current.position.y,targetY,1-Math.exp(-delta*11));
+  if(Math.abs(ref.current.position.z-target)>.0005||Math.abs(ref.current.position.y-targetY)>.0005)invalidate();
  });
  return <mesh ref={ref} name={`book-${book.id}`} position={[reader?0:book.x,book.height/2,reader?0:1.313]}
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
-  <planeGeometry args={[width,book.height]}/>
+  <primitive object={face} attach="geometry"/>
   <meshBasicMaterial map={texture} transparent alphaTest={.1} toneMapped={false}/>
  </mesh>;
 }
 export function Book(props){
- return props.book.photoPresentation?<PhotographicBook {...props}/>:<ConstructedBook {...props}/>;
+ return props.book.spineImage?<PhotographicBook {...props}/>:<ConstructedBook {...props}/>;
 }
 function ConstructedBook({book,onOpen,reader=false,reducedMotion=false}){
  const ref=useRef();const [hovered,setHovered]=useState(false);const {invalidate,gl}=useThree();
@@ -230,6 +263,14 @@ useTexture.preload('/images/agate-bookends.webp');
 function World({onOpen,reducedMotion,readerBook}){
  return <>
  <Camera reader={!!readerBook}/><Lighting/>
+ {!readerBook&&books.slice(0,-1).map((book,i)=>{
+  const height=Math.min(book.height,books[i+1].height)-.16;
+  // A recessed contact shadow closes tiny irregular jacket seams without
+  // changing the photographed outer edges or covering their graphics.
+  return <mesh key={`seam-${book.id}`} position={[book.x+book.width/2,height/2+.04,1.30]}>
+   <planeGeometry args={[.045,height]}/><meshBasicMaterial color="#36332e" toneMapped={false}/>
+  </mesh>;
+ })}
  {readerBook?<Book key={readerBook.id} book={readerBook} reader reducedMotion={reducedMotion}/>:<Suspense fallback={null}><Bookend side={-1}/>{books.map(book=><Suspense key={book.id} fallback={null}><Book book={book} onOpen={onOpen} reducedMotion={reducedMotion}/></Suspense>)}<Bookend side={1}/></Suspense>}
  <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[200,200]}/><shadowMaterial transparent opacity={.08}/></mesh>
  <ContactShadows position={[0,.002,0]} opacity={.25} scale={14} blur={2.6} far={5} resolution={256} frames={Infinity}/>

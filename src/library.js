@@ -499,7 +499,7 @@ export const books = [
     "coverImage": null
   }
 ];
-const bindingGap=.012;
+const bindingGap=0;
 const total=books.reduce((sum,b)=>sum+b.width,0)+bindingGap*(books.length-1);
 let cursor=-total/2;
 books.forEach(book=>{book.x=cursor+book.width/2;book.spineImage??=null;book.coverImage??=null;cursor+=book.width+bindingGap;});
