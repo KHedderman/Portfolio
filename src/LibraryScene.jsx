@@ -82,6 +82,34 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  },[book,spineShape]);
  useEffect(()=>()=>spineSurface.dispose(),[spineSurface]);
  const w=book.width,h=book.height,d=book.depth;
+ // Close the entire photographic outline into the binding, including both shoulders.
+ // The previous shallow extrusion ended before the cover edges and left open seams.
+ const jacketConnection=useMemo(()=>{
+  if(!spineShape)return null;
+  const outline=spineShape.getPoints();
+  if(outline[0].equals(outline[outline.length-1]))outline.pop();
+  const positions=[],uvs=[],indices=[];const rings=8;
+  const rearZ=d/2-.06;
+  const top=h/2-.04-.09*Math.exp(-.05/.15),bottom=-h/2+.10;
+  const cy=(top+bottom)/2,halfY=(top-bottom)/2,halfX=bodyWidth/2+.035;
+  for(let i=0;i<outline.length;i++){
+   const p=outline[i];
+   const scale=Math.max(Math.abs(p.x)/halfX,Math.abs(p.y-cy)/halfY);
+   const rearX=p.x/scale,rearY=cy+(p.y-cy)/scale;
+   for(let j=0;j<=rings;j++){
+    const t=j/rings,smooth=t*t*(3-2*t);
+    positions.push(THREE.MathUtils.lerp(p.x,rearX,smooth),THREE.MathUtils.lerp(p.y,rearY,smooth),THREE.MathUtils.lerp(d/2+.013,rearZ,t));
+    // Sample just inside the opaque photograph; carry its blue/white edge into the joint.
+    uvs.push((p.x*.92)/w+.5,(p.y*.99)/h+.5);
+    if(j<rings){const a=i*(rings+1)+j,b=((i+1)%outline.length)*(rings+1)+j;indices.push(a,b,a+1,a+1,b,b+1);}
+   }
+  }
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+  geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
+  geometry.setIndex(indices);geometry.computeVertexNormals();return geometry;
+ },[spineShape,w,h,d,bodyWidth]);
+ useEffect(()=>()=>jacketConnection?.dispose(),[jacketConnection]);
  const fittedCover=useMemo(()=>{
   if(!photographedJacket)return null;
   const depth=d-.02,height=h-.14;
@@ -109,7 +137,7 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
     <mesh key={side} geometry={fittedCover.board} position={[side*(bodyWidth/2+.0175),h/2+.03,bodyZ]} castShadow receiveShadow>{coverMaterial}</mesh>:
     <RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
    <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.01,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
-   {spineShape?<mesh position={[0,h/2,d/2-.04]} castShadow receiveShadow><extrudeGeometry args={[spineShape,{depth:.05,bevelEnabled:false,steps:1}]}/><meshStandardMaterial color={book.color} roughness={.8}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
+   {jacketConnection?<mesh geometry={jacketConnection} position={[0,h/2,0]} castShadow receiveShadow><meshStandardMaterial map={spineMap} side={THREE.DoubleSide} roughness={.78}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
    <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent alphaTest={.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,pageTop+.001,bodyZ]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>
  </group>;
