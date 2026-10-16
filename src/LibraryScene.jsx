@@ -64,9 +64,21 @@ function sharpenPhoto(shader){
  #endif
  `);
 }
-function PhotographicMaterial({map,sharpen=true,...props}){
+function sharpenClothPrint(shader){
+ sharpenPhoto(shader);
+ // Restore high-contrast printed ink only. Low-contrast threads retain the
+ // antialiased sampling that prevents the cloth's large grid interference.
+ shader.fragmentShader=shader.fragmentShader.replace(
+  'vec3 detail=clamp(sampledDiffuseColor.rgb-surrounding,vec3(-0.045),vec3(0.045));',
+  `vec3 darkest=min(sampledDiffuseColor.rgb,min(min(leftSample.rgb,rightSample.rgb),min(downSample.rgb,upSample.rgb)));
+   vec3 lightest=max(sampledDiffuseColor.rgb,max(max(leftSample.rgb,rightSample.rgb),max(downSample.rgb,upSample.rgb)));
+   float printEdge=smoothstep(0.12,0.32,dot(lightest-darkest,vec3(0.2126,0.7152,0.0722)));
+   vec3 detail=clamp((sampledDiffuseColor.rgb-surrounding)*1.6,vec3(-0.09),vec3(0.09))*printEdge;`
+ );
+}
+function PhotographicMaterial({map,cloth=false,...props}){
  return <meshBasicMaterial map={map} transparent toneMapped={false}
-  onBeforeCompile={sharpen?sharpenPhoto:undefined} {...props}/>;
+  onBeforeCompile={cloth?sharpenClothPrint:sharpenPhoto} {...props}/>;
 }
 
 function Camera({reader=false,readerHeight=0}){
@@ -166,7 +178,7 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
   <primitive object={face} attach="geometry"/>
-  <PhotographicMaterial map={texture} sharpen={!clothSpine} alphaTest={.1}/>
+  <PhotographicMaterial map={texture} cloth={clothSpine} alphaTest={.1}/>
  </mesh>;
 }
 export function Book(props){
