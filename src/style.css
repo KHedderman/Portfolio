@@ -43,3 +43,11 @@ body:has(.reading-room[open]){overflow:hidden}
 @media(max-width:600px){.library-heading h1 .title-library{font-size:16vw}.shelf-viewport{margin-top:-62px}.reading-section-heading{gap:16px;margin:30px 0 20px}.reading-section-heading h3{font-size:22px}.get-book-top{font-size:20px;gap:8px}}
 
 .library-intro{color:#6B6B6B}
+
+/* A slim caption band anchors the collection without covering the books. */
+.library-caption-band{position:relative;z-index:2;background:#181818;padding:19px 6%;margin-top:0}
+.library-caption-band .library-intro{width:100%;max-width:none;margin:0;padding:0;color:#c6c6c6;font-size:clamp(17px,1.8vw,26px);line-height:1.4;white-space:normal;text-wrap:pretty}
+.library-caption-band .spine-invitation{color:#fff}
+.shelf-scroll-controls{margin-top:0;margin-bottom:12px}
+@media(min-width:801px){.library-caption-band{margin-top:-12px}}
+@media(max-width:600px){.library-caption-band{padding:17px 6%}.library-caption-band .library-intro{font-size:19px;line-height:1.35}}

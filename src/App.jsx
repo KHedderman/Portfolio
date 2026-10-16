@@ -47,7 +47,7 @@ export default function App(){
   <section className="shelf-section" aria-label="Interactive book collection" aria-describedby="shelf-hint">
    <header className="library-heading"><h1 aria-label="Kait’s Library"><span className="title-owner">KAIT’S</span><span className="title-library">LIBRARY</span></h1></header>
    <Shelf onOpen={openBook} reducedMotion={reducedMotion}/>
-   <p id="shelf-hint" className="library-intro">Books shaping how I think about AI, design, and being human. <span className="spine-invitation">Select a spine.</span></p>
+   <div className="library-caption-band"><p id="shelf-hint" className="library-intro">Books shaping how I think about AI, design, and being human. <span className="spine-invitation">Select a spine.</span></p></div>
   </section>
   <section id="reading-index" className={`reading-index ${indexOpen?'is-open':''}`} aria-label="Browse every title" hidden={!indexOpen}>
    <div className="index-heading"><h2>On the shelf</h2><button onClick={()=>setIndexOpen(false)} aria-label="Close reading list">×</button></div>
