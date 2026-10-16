@@ -45,10 +45,11 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
  // Fit the supporting binding inside the photographed jacket, not around it.
  const photographedJacket=!!book.spineSilhouette;
  const bodyWidth=book.width-.07;
- const bodyHeight=book.height-(photographedJacket?.24:.15);
+ const bodyHeight=book.height-(photographedJacket?.175:.095);
+ const bodyY=book.height/2+(photographedJacket?.0325:.0275);
  const bodyDepth=book.depth-(photographedJacket?.02:.09);
  const bodyZ=photographedJacket?0:-.025;
- const pageTop=(book.height+bodyHeight)/2;
+ const pageTop=bodyY+bodyHeight/2;
  const pageHead=useMemo(()=>{
   const geometry=new THREE.PlaneGeometry(bodyWidth,bodyDepth,32,40);
   const vertices=geometry.attributes.position;
@@ -142,11 +143,11 @@ export function Book({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOver={reader?undefined:e=>{e.stopPropagation();setHovered(true);gl.domElement.style.cursor='pointer';gl.domElement.dataset.cursorInteractive='true';}}
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
-   <mesh castShadow receiveShadow position={[0,h/2,bodyZ]}><boxGeometry args={[bodyWidth,bodyHeight,bodyDepth]}/><meshStandardMaterial map={maps.paper} roughness={.92}/></mesh>
+   <mesh castShadow receiveShadow position={[0,bodyY,bodyZ]}><boxGeometry args={[bodyWidth,bodyHeight,bodyDepth]}/><meshStandardMaterial map={maps.paper} roughness={.92}/></mesh>
    {[-1,1].map(side=>photographedJacket?
     <mesh key={side} geometry={fittedCover.board} position={[side*(bodyWidth/2+.0175),h/2+.03,bodyZ]} castShadow receiveShadow>{coverMaterial}</mesh>:
-    <RoundedBox key={side} args={[.045,h,d]} radius={.014} smoothness={2} position={[side*(w/2-.015),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
-   <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.01,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
+    <RoundedBox key={side} args={[.025,h,d]} radius={.01} smoothness={2} position={[side*(w/2-.0125),h/2,bodyZ]} castShadow receiveShadow>{coverMaterial}</RoundedBox>)}
+   <mesh position={[photographedJacket?bodyWidth/2+.036:w/2+.001,h/2+(photographedJacket?.03:0),bodyZ]} rotation={[0,Math.PI/2,0]}>{fittedCover?<primitive object={fittedCover.face} attach="geometry"/>:<planeGeometry args={[d-.035,h-.02]}/>}<meshStandardMaterial map={coverMap} roughness={.8} bumpMap={maps.bump} bumpScale={book.coverImage?.0003:.003}/></mesh>
    {jacketConnection?<mesh geometry={jacketConnection} position={[0,h/2,0]} castShadow receiveShadow><meshStandardMaterial map={spineMap} side={THREE.DoubleSide} roughness={.78}/></mesh>:<RoundedBox args={[w,h,.07]} radius={.024} smoothness={3} position={[0,h/2,d/2-.025]} castShadow receiveShadow><meshStandardMaterial color={book.color} roughness={.72} bumpMap={maps.bump} bumpScale={.003}/></RoundedBox>}
    <mesh geometry={spineSurface} position={[0,h/2,d/2+.013]}><meshStandardMaterial map={spineMap} transparent={!photographedJacket} alphaTest={photographedJacket?0:.4} roughness={.78} bumpMap={maps.bump} bumpScale={.002}/></mesh>
    <mesh geometry={pageHead} position={[0,pageTop+.001,bodyZ]} rotation={[-Math.PI/2,0,0]} receiveShadow><meshStandardMaterial map={maps.paperTop} bumpMap={maps.paperRelief} bumpScale={.003} roughness={.96}/></mesh>

@@ -7,11 +7,11 @@ export const books = [
   {id:'empire-of-ai',title:'Empire of AI',subtitle:'Dreams and Nightmares in Sam Altman’s OpenAI',author:'Karen Hao',coverImage:'/images/books/empire-of-ai-cover-photo.webp',coverCrop:[.40373,.45894,.03226,.92627],spineImage:'/images/books/empire-of-ai-spine-photo.webp',spineCrop:[.15804,.12629,.02673,.95300],spineRelief:0,spineSilhouette:true,color:'#ed8456',ink:'#151515',height:4.08,width:.78,depth:2.68,binding:'paper',topic:'AI & power',bibliographyConfirmed:true,notes:[],takeaways:[],questions:[],purchaseUrl:'https://bookshop.org/search?keywords=Empire%20of%20AI%20Karen%20Hao',affiliate:false},
   {id:'artificial-intimacy',title:'Artificial Intimacy',subtitle:'',author:'Sherry Turkle',color:'#b5aa92',ink:'#2d3635',height:3.47,width:.64,depth:1.88,binding:'paper',topic:'Technology & connection',bibliographyConfirmed:false,notes:[],takeaways:[],questions:[],purchaseUrl:'https://bookshop.org/search?keywords=Artificial%20Intimacy%20Sherry%20Turkle',affiliate:false},
 ];
-// A slight binding overlap closes transparent photographic edge fringes.
-const bindingOverlap=.012;
-const total=books.reduce((sum,b)=>sum+b.width,0)-bindingOverlap*(books.length-1);
+// A narrow physical seam keeps adjacent jackets separate without overlapping.
+const bindingGap=.012;
+const total=books.reduce((sum,b)=>sum+b.width,0)+bindingGap*(books.length-1);
 let cursor=-total/2;
-books.forEach(book=>{book.x=cursor+book.width/2;book.spineImage??=null;book.coverImage??=null;cursor+=book.width-bindingOverlap;});
+books.forEach(book=>{book.x=cursor+book.width/2;book.spineImage??=null;book.coverImage??=null;cursor+=book.width+bindingGap;});
 export const bookendX=total/2+.86;
 
 export const shelfFramingHeight=Math.max(4.35,...books.map(book=>book.height+.5));
