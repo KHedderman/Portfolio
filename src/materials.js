@@ -35,7 +35,24 @@ export function bookTextures(book){
   ctx.font='30px Arial';book.author.split(' & ').forEach((name,i)=>ctx.fillText(name,80,1280+i*45));
   const paper=document.createElement('canvas');paper.width=512;paper.height=1024;const p=paper.getContext('2d');p.fillStyle='#e9e1ce';p.fillRect(0,0,512,1024);
   for(let y=0;y<1024;y+=3){p.strokeStyle=y%9===0?'#cfc5ae':'#ddd3bf';p.lineWidth=.6;p.beginPath();p.moveTo(0,y);p.lineTo(512,y+.4);p.stroke();}
+  // Looking down onto the book: individual sheets run along its depth.
+  const head=document.createElement('canvas');head.width=1024;head.height=512;
+  const headContext=head.getContext('2d');const headPixels=headContext.createImageData(1024,512);
+  let seed=97;const random=()=>((seed=seed*16807%2147483647)/2147483647);
+  const spacing=1024/Math.max(150,Math.round(book.width*500));
+  const sheetTone=Array.from({length:Math.ceil(1024/spacing)+1},()=>random()*5-2.5);
+  for(let x=0;x<1024;x++)for(let y=0;y<512;y++){
+   const phase=(x+.17*Math.sin(y/53))/spacing;
+   const seam=Math.pow(Math.max(0,Math.cos(phase*Math.PI*2)),12)*12;
+   const grain=(random()-.5)*5;
+   const edgeShade=5*Math.exp(-Math.min(x,1023-x)/24);
+   const tone=sheetTone[Math.floor(x/spacing)]+grain-seam-edgeShade;
+   const i=(y*1024+x)*4;
+   headPixels.data[i]=240+tone;headPixels.data[i+1]=237+tone;headPixels.data[i+2]=228+tone;headPixels.data[i+3]=255;
+  }
+  headContext.putImageData(headPixels,0,0);
+  const paperTop=texture(head);const paperRelief=texture(head);paperRelief.colorSpace=THREE.NoColorSpace;
   const cloth=noiseCanvas('#888888',true);const bump=texture(cloth);bump.colorSpace=THREE.NoColorSpace;
-  return {spine:texture(spine),cover:texture(cover),paper:texture(paper),bump};
+  return {spine:texture(spine),cover:texture(cover),paper:texture(paper),paperTop,paperRelief,bump};
 }
 export function disposeTextures(maps){Object.values(maps).forEach(map=>map.dispose());}
