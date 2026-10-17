@@ -38,7 +38,7 @@ function Shelf({onOpen,reducedMotion}){
 }
 export default function App(){
  const [selected,setSelected]=useState(fromHash);const [indexOpen,setIndexOpen]=useState(false);
- const dialog=useRef();const lastFocus=useRef();const reducedMotion=useReducedMotion();
+ const dialog=useRef();const backdropPress=useRef(false);const lastFocus=useRef();const reducedMotion=useReducedMotion();
  const book=books.find(b=>b.id===selected);const ordinal=books.findIndex(b=>b.id===selected);
  function openBook(id){lastFocus.current=document.activeElement;setSelected(id);setIndexOpen(false);}
  function closeBook(){setSelected(null);}
@@ -48,6 +48,7 @@ export default function App(){
   if(book){if(!dialog.current.open)dialog.current.showModal();dialog.current.querySelector('.back-button')?.focus({preventScroll:true});dialog.current.scrollTop=0;history.replaceState(null,'',`#${book.id}`);}
   else{if(dialog.current.open)dialog.current.close();history.replaceState(null,'',location.pathname+location.search);const target=lastFocus.current;if(target&&target.offsetParent!==null)target.focus();else document.querySelector('.index-toggle')?.focus();}
  },[selected]);
+ function outsideCard(event){const r=dialog.current.getBoundingClientRect();return event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom;}
  function readerKeys(event){if(event.altKey||event.ctrlKey||event.metaKey)return;if(event.key==='ArrowRight'){event.preventDefault();step(1);}if(event.key==='ArrowLeft'){event.preventDefault();step(-1);}}
  return <main className={`library ${book?'is-reading':''}`}>
   <Cursor dialogRef={dialog} readerOpen={Boolean(book)}/>
@@ -61,9 +62,9 @@ export default function App(){
    <div className="index-heading"><h2>On the shelf</h2><button onClick={()=>setIndexOpen(false)} aria-label="Close reading list">×</button></div>
    <ol>{books.map((b,i)=><li key={b.id}><button onClick={()=>openBook(b.id)}><span className="index-number">{String(i+1).padStart(2,'0')}</span><span className="mini-spine" style={{background:b.color}}/><span><strong>{b.title}</strong><small>{b.author}</small></span><Arrow/></button></li>)}</ol>
   </section>
-  <dialog ref={dialog} className="reading-room" onCancel={event=>{event.preventDefault();closeBook();}} onClose={()=>{if(selected)setSelected(null);}} onKeyDown={readerKeys} aria-labelledby="reading-title">
+  <dialog ref={dialog} className="reading-room" onPointerDown={event=>{backdropPress.current=event.target===dialog.current&&outsideCard(event);}} onClick={event=>{if(backdropPress.current&&event.target===dialog.current&&outsideCard(event))closeBook();backdropPress.current=false;}} onCancel={event=>{event.preventDefault();closeBook();}} onClose={()=>{if(selected)setSelected(null);}} onKeyDown={readerKeys} aria-labelledby="reading-title">
    {book&&<>
-    <div className="reader-topline"><button className="back-button" onClick={closeBook} autoFocus><span aria-hidden="true">←</span> Back to the shelf</button><span className="small-label">{String(ordinal+1).padStart(2,'0')} / {String(books.length).padStart(2,'0')}</span></div>
+    <div className="reader-topline"><button className="back-button" onClick={closeBook} aria-label="Close book details" autoFocus><span aria-hidden="true">×</span> Close</button><span className="small-label">{String(ordinal+1).padStart(2,'0')} / {String(books.length).padStart(2,'0')}</span></div>
     <div className="reader-layout">
      <aside className="reader-object" aria-label={`Three-dimensional view of ${book.title}`}><Suspense fallback={<div className="loading-label">Opening the book…</div>}><LibraryScene readerBook={book} reducedMotion={reducedMotion}/></Suspense><span className="object-caption">FROM KAIT’S READING SHELF</span></aside>
      <article className="reader-content">

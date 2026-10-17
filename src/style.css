@@ -80,3 +80,31 @@ body:has(.reading-room[open]){overflow:hidden}
 @media(hover:hover) and (pointer:fine){html.custom-cursor-active,html.custom-cursor-active *{cursor:none!important}}
 @media(prefers-reduced-motion:reduce){.cursor-ring{transition:none}}
 @media(forced-colors:active){.custom-cursor{display:none}}
+
+/* Keep the library visible around the book details card. */
+.reading-room{width:min(1040px,calc(100vw - 64px));height:fit-content;max-height:86dvh;margin:auto;border:1px solid #deded7;border-radius:12px;box-shadow:0 24px 90px #18181838;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b6bbb4 transparent}
+.reading-room::backdrop{background:#1e25234d;backdrop-filter:none}
+.reader-topline{position:sticky;top:0;padding:12px 28px;background:#fafaf8;z-index:3;border-bottom:1px solid #e4e4dc}
+.back-button{min-height:44px;gap:10px}
+.back-button span{font-size:26px}
+.reader-layout{grid-template-columns:38% 62%;min-height:0;align-items:start}
+.reader-object{top:69px;height:clamp(300px,52dvh,490px);min-height:0}
+.reader-content{min-width:0;padding:28px 32px 32px 12px}
+.reader-content h2{font-size:clamp(24px,2.5vw,34px);margin:16px 0 12px}
+.reading-section-heading{margin:28px 0 20px;flex-wrap:wrap;gap:12px}
+.empty-notes{min-height:130px}
+.note-prose{font-size:22px}
+.reader-pagination{margin-top:28px;gap:12px}
+.reader-pagination button{min-height:44px}
+@media(max-width:700px){
+ .reading-room{width:calc(100vw - 24px);max-height:88dvh;border-radius:10px}
+ .reader-topline{padding:8px 18px}
+ .reader-layout{display:block}
+ .reader-object{position:relative;top:auto;height:260px;min-height:0;margin:0}
+ .object-caption{bottom:3%}
+ .reader-content{padding:18px 22px 26px}
+ .reader-content h2{font-size:clamp(23px,6vw,31px)}
+ .reading-section-heading h3{font-size:22px}
+ .get-book-top{font-size:20px}
+ .reader-pagination button{font-size:16px}
+}
