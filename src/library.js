@@ -249,7 +249,7 @@ export const books = [
     "color": "#ecebe1",
     "ink": "#181a19",
     "topic": "Creativity",
-    "height": 4.02,
+    "height": 3.87,
     "width": 0.49,
     "depth": 2.6,
     "binding": "paper",

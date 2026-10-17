@@ -144,10 +144,13 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   const bodyWidth=widths[Math.floor(widths.length/2)];
   // Correct perspective taper in selected references using broad body samples.
   // Hold the fit outside the body so the real rounded head and foot survive.
-  const fitStations=book.spineFitEnds?[.03,.08,.15,.35,.55,.75,.85,.92,.97]:[.15,.35,.55,.75,.85];
+  const fitStations=book.spineFitEnds?[.08,.15,.35,.55,.75,.85,.92]:[.15,.35,.55,.75,.85];
   const stations=fitStations.map(t=>{
    const v=bottom+(top-bottom)*t;
-   const band=rows.filter(r=>Math.abs(r.v-v)<(top-bottom)*.035);
+   // Sample the straight shoulders, never the rounded cap: fitting its
+   // narrower silhouette would inflate the top into a flared shape.
+   const bandRadius=book.spineFitEnds&&(t<.15||t>.85)?.015:.035;
+   const band=rows.filter(r=>Math.abs(r.v-v)<(top-bottom)*bandRadius);
    return {v,c:band.reduce((s,r)=>s+r.c,0)/band.length,w:band.reduce((s,r)=>s+r.w,0)/band.length};
   });
   const fitAt=v=>{
