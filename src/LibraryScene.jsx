@@ -64,7 +64,7 @@ function sharpenPhoto(shader){
  #endif
  `);
 }
-function sharpenClothPrint(shader){
+function sharpenPrintedDetail(shader){
  sharpenPhoto(shader);
  // Restore high-contrast printed ink only. Low-contrast threads retain the
  // antialiased sampling that prevents the cloth's large grid interference.
@@ -76,9 +76,9 @@ function sharpenClothPrint(shader){
    vec3 detail=clamp((sampledDiffuseColor.rgb-surrounding)*1.6,vec3(-0.09),vec3(0.09))*printEdge;`
  );
 }
-function PhotographicMaterial({map,cloth=false,...props}){
+function PhotographicMaterial({map,cloth=false,printClarity=false,...props}){
  return <meshBasicMaterial map={map} transparent toneMapped={false}
-  onBeforeCompile={cloth?sharpenClothPrint:sharpenPhoto} {...props}/>;
+  onBeforeCompile={cloth||printClarity?sharpenPrintedDetail:sharpenPhoto} {...props}/>;
 }
 
 function Camera({reader=false,readerHeight=0}){
@@ -182,7 +182,7 @@ function PhotographicBook({book,onOpen,reader=false,reducedMotion=false}){
   onPointerOut={reader?undefined:()=>{setHovered(false);gl.domElement.style.cursor='default';delete gl.domElement.dataset.cursorInteractive;}}
   onClick={reader?undefined:e=>{e.stopPropagation();onOpen(book.id);}}>
   <primitive object={face} attach="geometry"/>
-  <PhotographicMaterial map={texture} cloth={clothSpine} alphaTest={.1}/>
+  <PhotographicMaterial map={texture} cloth={clothSpine} printClarity={kind==='spine'&&book.spinePrintClarity} alphaTest={.1}/>
  </mesh>;
 }
 export function Book(props){

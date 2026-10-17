@@ -255,7 +255,8 @@ export const books = [
     "binding": "paper",
     "roughness": 0.58,
     "metalness": 0.03,
-    "spineImage": "/images/books/how-great-ideas-happen-refined-spine.webp",
+    "spineImage": "/images/books/how-great-ideas-happen-native-spine.webp",
+    "spinePrintClarity": true,
     "spineCrop": [
       0,
       1
@@ -291,7 +292,8 @@ export const books = [
     "binding": "paper",
     "roughness": 0.88,
     "metalness": 0,
-    "spineImage": "/images/books/crisis-engineering-individual-spine.webp",
+    "spineImage": "/images/books/crisis-engineering-native-spine.webp",
+    "spinePrintClarity": true,
     "spineCrop": [
       0,
       1
