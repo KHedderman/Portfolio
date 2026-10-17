@@ -255,7 +255,7 @@ export const books = [
     "binding": "paper",
     "roughness": 0.58,
     "metalness": 0.03,
-    "spineImage": "/images/books/how-great-ideas-happen-individual-spine.webp",
+    "spineImage": "/images/books/how-great-ideas-happen-refined-spine.webp",
     "spineCrop": [
       0,
       1
