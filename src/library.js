@@ -221,7 +221,7 @@ export const books = [
     "binding": "cloth",
     "roughness": 0.96,
     "metalness": 0,
-    "spineImage": "/images/books/the-creative-act-individual-spine.webp",
+    "spineImage": "/images/books/the-creative-act-native-spine.webp",
     "spineCrop": [
       0,
       1
