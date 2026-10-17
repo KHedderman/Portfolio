@@ -68,41 +68,6 @@ export const books = [
     "photoPresentation": true
   },
   {
-    "id": "co-intelligence",
-    "title": "Co-Intelligence",
-    "subtitle": "Living and Working with AI",
-    "author": "Ethan Mollick",
-    "color": "#354332",
-    "ink": "#181a19",
-    "height": 3.6,
-    "width": 0.44,
-    "depth": 2.36,
-    "binding": "paper",
-    "topic": "Working with AI",
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=Co-Intelligence%20Ethan%20Mollick",
-    "affiliate": false,
-    "spineImage": "/images/books/co-intelligence-individual-spine.webp",
-    "coverImage": "/images/books/co-intelligence-individual-cover.webp",
-    "roughness": 0.68,
-    "metalness": 0,
-    "spineCrop": [
-      0,
-      1
-    ],
-    "spineSilhouette": false,
-    "sourcePhoto": true,
-    "spinePerspectiveFit": true,
-    "photoPresentation": true,
-    "coverCrop": [
-      0,
-      1
-    ]
-  },
-  {
     "id": "empire-of-ai",
     "title": "Empire of AI",
     "subtitle": "Dreams and Nightmares in Sam Altman’s OpenAI",
@@ -277,38 +242,6 @@ export const books = [
     "photoPresentation": true
   },
   {
-    "id": "the-artists-way",
-    "title": "The Artist’s Way",
-    "author": "Julia Cameron",
-    "subtitle": "A Spiritual Path to Higher Creativity",
-    "color": "#a32446",
-    "ink": "#fff4dd",
-    "topic": "Creativity & practice",
-    "height": 4.5,
-    "width": 0.36,
-    "depth": 3.5,
-    "binding": "paper",
-    "spineImage": "/images/books/the-artists-way-individual-spine.webp",
-    "coverImage": "/images/books/the-artists-way-individual-cover.webp",
-    "spineCrop": [
-      0,
-      1
-    ],
-    "coverCrop": [
-      0,
-      1
-    ],
-    "spinePerspectiveFit": true,
-    "photoPresentation": true,
-    "sourcePhoto": true,
-    "bibliographyConfirmed": true,
-    "notes": [],
-    "takeaways": [],
-    "questions": [],
-    "purchaseUrl": "https://bookshop.org/search?keywords=The%20Artist%27s%20Way%20Julia%20Cameron",
-    "affiliate": false
-  },
-  {
     "id": "how-great-ideas-happen",
     "title": "How Great Ideas Happen",
     "author": "George Newman",
@@ -341,7 +274,8 @@ export const books = [
       1
     ],
     "photoPresentation": true,
-    "spinePerspectiveFit": true
+    "spinePerspectiveFit": true,
+    "spineFitEnds": true
   },
   {
     "id": "crisis-engineering",
