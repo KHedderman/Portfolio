@@ -111,4 +111,6 @@ body:has(.reading-room[open]){overflow:hidden}
  .library-heading h1 .title-owner{font-size:11.8vw}
  .library-heading h1 .title-library{font-size:16.8vw}
  .shelf-stage{left:-24px}
+ /* Bring navigation closer to the book bases without reducing touch targets. */
+ .shelf-scroll-controls{margin-top:-32px}
 }
