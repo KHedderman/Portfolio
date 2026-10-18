@@ -108,3 +108,11 @@ body:has(.reading-room[open]){overflow:hidden}
  .get-book-top{font-size:20px}
  .reader-pagination button{font-size:16px}
 }
+
+/* Mobile title proportions and a closer starting position for the scrollable shelf. */
+@media(max-width:600px){
+ .shelf-section{margin-top:12px}
+ .library-heading h1 .title-owner{font-size:11.8vw}
+ .library-heading h1 .title-library{font-size:16.8vw}
+ .shelf-stage{left:-24px}
+}
