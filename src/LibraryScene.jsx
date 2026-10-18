@@ -81,6 +81,32 @@ function PhotographicMaterial({map,cloth=false,printClarity=false,...props}){
   onBeforeCompile={cloth||printClarity?sharpenPrintedDetail:sharpenPhoto} {...props}/>;
 }
 
+// Browser zoom follows devicePixelRatio in Fiber. Pinch zoom changes only
+// visualViewport.scale, so request extra drawing pixels without altering photos.
+function PinchZoomResolution(){
+ const {gl,size,setDpr,invalidate,get}=useThree();
+ useEffect(()=>{
+  const viewport=window.visualViewport;
+  if(!viewport)return;
+  let frame;
+  const update=()=>{
+   const base=Math.min(3,Math.max(1,window.devicePixelRatio||1));
+   const scale=Math.max(1,viewport.scale);
+   // Keep normal rendering identical; bound extra zoom work for large shelves.
+   const budget=Math.sqrt(16000000/Math.max(1,size.width*size.height));
+   const hardware=gl.capabilities.maxTextureSize/Math.max(1,size.width,size.height);
+   const ratio=scale<=1?base:Math.max(base,Math.min(base*scale,6,budget,hardware));
+   if(Math.abs(get().viewport.dpr-ratio)>.001){setDpr(ratio);invalidate();}
+  };
+  const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(update);};
+  viewport.addEventListener('resize',schedule);
+  window.addEventListener('resize',schedule);
+  update();
+  return()=>{cancelAnimationFrame(frame);viewport.removeEventListener('resize',schedule);window.removeEventListener('resize',schedule);};
+ },[gl,size.width,size.height,setDpr,invalidate,get]);
+ return null;
+}
+
 function Camera({reader=false,readerHeight=0}){
  const {camera,size,invalidate}=useThree();
  useEffect(()=>{
@@ -364,14 +390,6 @@ useTexture.preload('/images/agate-bookends.webp');
 function World({onOpen,reducedMotion,readerBook}){
  return <>
  <Camera reader={!!readerBook} readerHeight={readerBook?.height??0}/><Lighting/>
- {!readerBook&&books.slice(0,-1).map((book,i)=>{
-  const height=Math.min(book.height,books[i+1].height)-.16;
-  // A recessed contact shadow closes tiny irregular jacket seams without
-  // changing the photographed outer edges or covering their graphics.
-  return <mesh key={`seam-${book.id}`} position={[book.x+book.width/2,height/2+.04,1.30]}>
-   <planeGeometry args={[.045,height]}/><meshBasicMaterial color="#36332e" toneMapped={false}/>
-  </mesh>;
- })}
  {readerBook?<Book key={readerBook.id} book={readerBook} reader reducedMotion={reducedMotion}/>:<Suspense fallback={null}><Bookend side={-1}/>{books.map(book=><Suspense key={book.id} fallback={null}><Book book={book} onOpen={onOpen} reducedMotion={reducedMotion}/></Suspense>)}<Bookend side={1}/></Suspense>}
  <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.025,0]} receiveShadow><planeGeometry args={[200,200]}/><shadowMaterial transparent opacity={.08}/></mesh>
  <ContactShadows position={[0,.002,0]} opacity={.25} scale={14} blur={2.6} far={5} resolution={256} frames={Infinity}/>
@@ -379,6 +397,7 @@ function World({onOpen,reducedMotion,readerBook}){
 class RenderBoundary extends React.Component{constructor(p){super(p);this.state={failed:false};}static getDerivedStateFromError(){return {failed:true};}render(){return this.state.failed?<div className="scene-unavailable">The 3D shelf couldn’t load. You can still open every book from the reading list below.</div>:this.props.children;}}
 export default function LibraryScene({onOpen,reducedMotion=false,readerBook=null}){
  return <RenderBoundary><Canvas orthographic shadows frameloop="demand" dpr={[1,3]} gl={{antialias:true,alpha:true,powerPreference:'high-performance'}} camera={{near:.1,far:250}} fallback={<div className="scene-unavailable">Explore the books through the reading list below.</div>} onCreated={({gl})=>{gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=1.05;}}>
+  <PinchZoomResolution/>
   <Suspense fallback={null}><World onOpen={onOpen} reducedMotion={reducedMotion} readerBook={readerBook}/></Suspense>
  </Canvas></RenderBoundary>;
 }
