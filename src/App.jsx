@@ -33,7 +33,7 @@ function Shelf({onOpen,reducedMotion}){
   <div ref={viewport} id="shelf-scroll" className="shelf-viewport" tabIndex={scroll.overflow?0:undefined} role="region" aria-label="Bookshelf: scroll horizontally to explore" onKeyDown={event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();move(event.key==='ArrowRight'?1:-1);}}}>
    <div ref={stage} className="shelf-stage" style={{'--shelf-width':`${Math.max(780,(bookendX*2+2.5)*110)}px`}}><Suspense fallback={<div className="loading-label">Opening the library…</div>}><LibraryScene onOpen={onOpen} reducedMotion={reducedMotion}/></Suspense></div>
   </div>
-  {scroll.overflow&&<nav className="shelf-scroll-controls" aria-label="Explore the bookshelf"><button aria-label="Scroll toward left bookend" aria-controls="shelf-scroll" disabled={!scroll.left} onClick={()=>move(-1)}>←</button><span>Explore the shelf</span><button aria-label="Scroll toward right bookend" aria-controls="shelf-scroll" disabled={!scroll.right} onClick={()=>move(1)}>→</button></nav>}
+  {scroll.overflow&&<nav className="shelf-scroll-controls" aria-label="Explore the bookshelf"><button aria-label="Scroll toward left bookend" aria-controls="shelf-scroll" disabled={!scroll.left} onClick={()=>move(-1)}>←</button><button aria-label="Scroll toward right bookend" aria-controls="shelf-scroll" disabled={!scroll.right} onClick={()=>move(1)}>→</button></nav>}
  </>;
 }
 export default function App(){

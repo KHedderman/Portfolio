@@ -25,9 +25,8 @@ body:has(.reading-room[open]){overflow:hidden}
 .shelf-viewport{position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;margin-top:clamp(-110px,-7vw,-28px);overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#a4afa6 transparent}
 .shelf-viewport:focus-visible{outline:2px solid #718d87;outline-offset:-3px}
 .shelf-stage{width:max(100%,var(--shelf-width));margin-top:0}
-.shelf-scroll-controls{display:flex;align-items:center;justify-content:space-between;width:88%;margin:8px auto 16px;color:#5f6860}
-.shelf-scroll-controls span{font:italic 18px Cormorant,Georgia,serif}
-.shelf-scroll-controls button{display:grid;place-items:center;width:46px;height:44px;border:1px solid #9ca99e;border-radius:50%;font:24px Arial,sans-serif}
+.shelf-scroll-controls{display:flex;align-items:center;justify-content:space-between;width:88%;margin:-8px auto 0;color:#252525}
+.shelf-scroll-controls button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;font:18px Arial,sans-serif}
 .shelf-scroll-controls button:disabled{opacity:.25;cursor:default}
 @media(max-width:600px){.shelf-viewport{margin-top:-32px}.shelf-stage{height:440px;margin-top:0}.library-intro{font-size:19px;white-space:normal;line-height:1.3}.shelf-hint{font-size:7px;letter-spacing:1px}}
 
@@ -48,16 +47,13 @@ body:has(.reading-room[open]){overflow:hidden}
 .library-caption-band{position:relative;z-index:2;background:#181818;padding:19px 6%;margin-top:0}
 .library-caption-band .library-intro{width:100%;max-width:none;margin:0;padding:0;color:#c6c6c6;font-size:clamp(17px,1.8vw,26px);line-height:1.4;white-space:normal;text-wrap:pretty}
 .library-caption-band .spine-invitation{color:#fff}
-.shelf-scroll-controls{margin-top:0;margin-bottom:12px}
 @media(min-width:801px){.library-caption-band{margin-top:-12px}}
 @media(max-width:600px){.library-caption-band{padding:17px 6%}.library-caption-band .library-intro{font-size:19px;line-height:1.35}}
 
 /* Keep the title layered at tablet sizes without exposing native scroll chrome. */
 .shelf-viewport{scrollbar-width:none}
 .shelf-viewport::-webkit-scrollbar{display:none;width:0;height:0}
-.shelf-scroll-controls{position:relative;z-index:2;margin-top:-8px;margin-bottom:8px}
-.shelf-scroll-controls button{width:44px;height:44px;border-color:#c3c9c4;font-size:22px}
-.shelf-scroll-controls span{font-size:17px}
+.shelf-scroll-controls{position:relative;z-index:2}
 @media(max-width:1100px){.shelf-stage{height:440px}.shelf-viewport{margin-top:-62px}}
 
 /* Fill tall viewports with the shelf, not blank space below the caption. */
